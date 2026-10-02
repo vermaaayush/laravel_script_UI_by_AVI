@@ -132,7 +132,7 @@
         <div class="card-body text-center p-0 overflow-hidden flex flex-col h-full">
             <div class="p-6 border-b border-white/10 flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-[#d25a3a]">account_balance_wallet</span>
+                    <span class="material-symbols-outlined text-[16px] text-[#c59b27]">account_balance_wallet</span>
                     Portfolio Valuation
                 </span>
                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -145,7 +145,7 @@
                 <p id="total_live_wallet_balance" class="text-3xl sm:text-4xl font-extrabold font-mono text-white mb-4 tracking-tight">$0.00</p>
 
                 @if (!$walletData['btc']['wallet'] || !$walletData['usdt']['wallet'] || (isset($walletData['eth']) && !$walletData['eth']['wallet']))
-                <button class="bg-[#b34020] hover:bg-[#8c2d13] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm" data-bs-toggle="modal" data-bs-target="#addWallet">
+                <button class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5 mx-auto" data-bs-toggle="modal" data-bs-target="#addWallet">
                     + New Asset Wallet
                 </button>
                 @endif
@@ -289,21 +289,21 @@
                        <div id="wallet_btn_block" class="flex flex-wrap gap-2">
     <?php if ($walletData['eth']['wallet']): ?>
     <button onclick="displayWalletForm('eth', '<?php echo $walletData['eth']['wallet']->address; ?>', '<?php echo $walletData['eth']['fund']; ?>')"
-        class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         ETH Wallet
     </button>
     <?php endif; ?>
 
     <?php if ($walletData['btc']['wallet']): ?>
     <button onclick="displayWalletForm('btc', '<?php echo $walletData['btc']['wallet']->address; ?>', '<?php echo $walletData['btc']['fund']; ?>')"
-        class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         BTC Wallet
     </button>
     <?php endif; ?>
 
     <?php if ($walletData['usdt']['wallet']): ?>
     <button onclick="displayWalletForm('usdt', '<?php echo $walletData['usdt']['wallet']->address; ?>', '<?php echo $walletData['usdt']['fund']; ?>')"
-        class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         USDT Wallet
     </button>
     <?php endif; ?>
@@ -385,13 +385,13 @@
 <div id="wallet_btn_block" class="flex flex-wrap gap-2">
 
 <?php if ($walletData_x['usdt']): ?>
-    <button onclick="showWalletDetails('usdt')" data-crypto-currency="usdttrc20" class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+    <button onclick="showWalletDetails('usdt')" data-crypto-currency="usdttrc20" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         USDT WALLET
     </button>
 <?php endif; ?>
 
 <?php if ($walletData_x['btc']): ?>
-    <button onclick="showWalletDetails('btc')" class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+    <button onclick="showWalletDetails('btc')" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         BTC WALLET
     </button>
 <?php endif; ?>
@@ -401,7 +401,7 @@
 
 
 <?php if ($walletData_x['eth']): ?>
-    <button id="receive-generate-btn" data-crypto-currency="eth" class="bg-[#b34020] hover:bg-[#b34020]/90 text-on-primary py-2 px-4 rounded-lg font-semibold transition-colors border-none shadow-sm">
+    <button id="receive-generate-btn" data-crypto-currency="eth" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         ETH WALLET
     </button>
 <?php endif; ?>
@@ -501,10 +501,12 @@
 <div class="modal fade" id="addWallet" tabindex="-1" aria-labelledby="addWalletLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
 
-        <div class="modal-content rounded-3">
+        <div class="modal-content rounded-2xl overflow-hidden shadow-2xl border border-slate-700 bg-white">
             <div id="message" style="display: none; padding: 10px; border-radius: 5px;"></div>
-            <div class="modal-header bg-[#b34020] text-white">
-                <h5 class="modal-title" id="addWalletLabel">Add New Wallet</h5>
+            <div class="modal-header bg-[#0f131a] text-white border-b border-[#c59b27]/30">
+                <h5 class="modal-title font-bold text-[#dfbb58] flex items-center gap-2" id="addWalletLabel">
+                    <span class="material-symbols-outlined text-[#c59b27]">add_circle</span> Add New Wallet
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 

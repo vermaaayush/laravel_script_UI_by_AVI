@@ -11,7 +11,7 @@
 ?>
 
 <!-- Main Content Area Wrapper -->
-<div class="flex flex-col lg:ml-[260px] min-h-screen transition-all w-full lg:w-[calc(100%-260px)]">
+<div class="flex flex-col lg:ml-[265px] min-h-screen transition-all w-full lg:w-[calc(100%-265px)]">
     <!-- TopNavBar -->
     <header class="sticky top-0 h-[68px] glass-header flex justify-between items-center px-4 lg:px-8 z-30 border-b border-[#edf0f4] w-full transition-all duration-200">
         <!-- Search & Mobile Menu Trigger -->

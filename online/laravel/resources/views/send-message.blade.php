@@ -67,13 +67,13 @@
                 <!-- Attachment -->
                 <div class="flex flex-col gap-xs border-t border-surface-container pt-md">
                     <label class="font-headline-sm text-body-md text-on-surface">Attach File (Optional)</label>
-                    <input type="file" name="file" id="file" class="w-full bg-surface-container-low border border-transparent rounded-lg p-2 font-body-md text-body-md focus:ring-2 focus:ring-primary focus:bg-surface outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#b34020]-container file:text-on-primary-container hover:file:bg-[#b34020]/20 cursor-pointer text-on-surface-variant"/>
+                    <input type="file" name="file" id="file" class="w-full bg-surface-container-low border border-transparent rounded-lg p-2 font-body-md text-body-md focus:ring-2 focus:ring-[#c59b27] focus:bg-surface outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#c59b27]/10 file:text-[#9c7614] hover:file:bg-[#c59b27]/20 cursor-pointer text-on-surface-variant"/>
                 </div>
             </div>
 
             <!-- Actions -->
             <div class="flex items-center justify-end pt-md border-t border-surface-container">
-                <button type="submit" class="px-8 py-3 rounded-lg bg-[#b34020] text-on-primary font-headline-sm hover:opacity-90 shadow-sm transition-opacity flex items-center gap-sm">
+                <button type="submit" class="px-8 py-3 rounded-xl bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold shadow-md transition-all flex items-center gap-2">
                     Send Message
                     <span class="material-symbols-outlined text-[18px]">send</span>
                 </button>

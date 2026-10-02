@@ -51,7 +51,7 @@
                                   
                             </p>
                             <div class="sign-info text-center">
-                              <button type="submit" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2" onclick="location.href='{{url('login')}}';">Back To Login</button>
+                              <button type="submit" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md inline-flex items-center justify-center gap-2" onclick="location.href='{{url('login')}}';">Back To Login</button>
                             </div>
                         </div>
                     </div>

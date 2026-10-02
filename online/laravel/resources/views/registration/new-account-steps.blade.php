@@ -4,7 +4,7 @@
 <section class="sign-in-page py-5">
   <div class="container p-0 ">
     <div class="row no-gutters height-self-center">
-      <div class="col-sm-12 align-self-center bg-[#b34020] rounded mb-5">
+      <div class="col-sm-12 align-self-center bg-[#0f131a] border border-[#c59b27]/30 shadow-2xl rounded-2xl mb-5">
         <div class="row m-0 ">
           <div class="col-md-8 bg-white sign-in-page-data iq-card pb-0 mb-0">
             <div class="sign-in-from">
@@ -617,10 +617,10 @@
                             </div>
 
                               <div class="col-md-12">
-                                 <p class="text-error">Account security questions. (You may change the questions to something memorable)</p>
+                                 <p class="text-slate-600 font-semibold mb-3">Account security questions. (You may change the questions to something memorable)</p>
                                  <div class="mb-6">
                                     <label class="block text-sm font-semibold text-on-surface-variant mb-2">Question 1</label>
-                                    <div class="alert text-white bg-[#b34020] py-1" role="alert">
+                                    <div class="alert text-[#dfbb58] bg-[#0f131a] border border-[#c59b27]/30 py-2 px-3 rounded-lg" role="alert">
                                        <div class="iq-alert-text">What is the name of your best actor ?</div>
                                     </div>
                                     <input name="ib_q_one" type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Answer">
@@ -628,7 +628,7 @@
 
                                  <div class="mb-6">
                                     <label class="block text-sm font-semibold text-on-surface-variant mb-2">Question 2</label>
-                                    <div class="alert text-white bg-[#b34020] py-1" role="alert">
+                                    <div class="alert text-[#dfbb58] bg-[#0f131a] border border-[#c59b27]/30 py-2 px-3 rounded-lg" role="alert">
                                        <div class="iq-alert-text">What is your favorite book?</div>
                                     </div>
                                     <input name="ib_q_two" type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Answer">
@@ -636,7 +636,7 @@
 
                                  <div class="mb-6">
                                     <label class="block text-sm font-semibold text-on-surface-variant mb-2">Question 3</label>
-                                    <div class="alert text-white bg-[#b34020] py-1" role="alert">
+                                    <div class="alert text-[#dfbb58] bg-[#0f131a] border border-[#c59b27]/30 py-2 px-3 rounded-lg" role="alert">
                                        <div class="iq-alert-text">What town was your mother born?</div>
                                     </div>
                                     <input name="ib_q_three" type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Answer">

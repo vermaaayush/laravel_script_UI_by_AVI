@@ -20,7 +20,7 @@
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
         <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">
-            <a class="hover:text-[#b34020] transition-colors" href="#">Transfers</a>
+            <a class="hover:text-[#c59b27] transition-colors" href="#">Transfers</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
             <span class="text-slate-800">Wire Security Clearance</span>
         </div>
@@ -72,12 +72,12 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-8 sm:p-12 text-center max-w-lg mx-auto">
             <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
                 <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
-                <div class="absolute inset-0 rounded-full border-4 border-[#b34020] border-t-transparent animate-spin"></div>
-                <span class="material-symbols-outlined text-[#b34020] text-3xl">currency_exchange</span>
+                <div class="absolute inset-0 rounded-full border-4 border-[#c59b27] border-t-transparent animate-spin"></div>
+                <span class="material-symbols-outlined text-[#c59b27] text-3xl">currency_exchange</span>
             </div>
 
             <h3 class="text-lg font-bold text-slate-900 mb-2">Interbank Settlement in Progress</h3>
-            <p id="animate_text" class="text-xs font-mono font-bold text-[#b34020] tracking-wider uppercase min-h-[20px]"></p>
+            <p id="animate_text" class="text-xs font-mono font-bold text-[#c59b27] tracking-wider uppercase min-h-[20px]"></p>
             
             <div class="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 text-left">
                 <div class="flex items-center gap-2 text-slate-500 text-xs mb-1">
@@ -97,7 +97,7 @@
                     <h2 class="text-lg font-bold text-slate-900">Security Authorization Required</h2>
                     <p class="text-xs text-slate-500 mt-0.5">External wire dispatch for transaction #{{ $tran_id }}</p>
                 </div>
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#b34020]/10 text-[#b34020]">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#c59b27]/15 text-[#9c7614]">
                     Step {{ $step - 3 }} of 3
                 </span>
             </div>
@@ -119,7 +119,7 @@
                                     <p class="text-xs text-slate-500">Please provide your authorized {{ $token[0]['code_name_1'] }} token to continue.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#b34020] focus:ring-2 focus:ring-[#b34020]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @elseif($step==5 && isset($token[0]) && $token[0]['allow_code_2']==1)
                                 <div class="mb-4">
@@ -130,7 +130,7 @@
                                     <p class="text-xs text-slate-500">Please provide your designated {{ $token[0]['code_name_2'] }} token to validate dispatch.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#b34020] focus:ring-2 focus:ring-[#b34020]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @elseif($step==6 && isset($token[0]) && $token[0]['allow_code_3']==1)
                                 <div class="mb-4">
@@ -141,11 +141,11 @@
                                     <p class="text-xs text-slate-500">Final clearance authorization token required for funds dispatch.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#b34020] focus:ring-2 focus:ring-[#b34020]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @endif    
 
-                            <button type="submit" name="next" class="w-full py-3.5 px-6 rounded-xl bg-[#b34020] hover:bg-[#8c2d13] text-white text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2" value="Next">
+                            <button type="submit" name="next" class="w-full py-3.5 px-6 rounded-xl bg-[#c59b27] hover:bg-[#b0871d] text-black text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2" value="Next">
                                 <span>Verify & Continue Settlement</span>
                                 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                             </button>

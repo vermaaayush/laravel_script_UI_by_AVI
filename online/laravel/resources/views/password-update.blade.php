@@ -37,7 +37,7 @@
                         <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="user_id" id="user_id" required value="{{ Session::get('user_id') ?? ($customer[0]->user_id ?? '') }}" />
                     </div>
                     <div class="mt-lg flex justify-end">
-                        <button type="button" id="firstForm" name="next" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors">Submit</button>
+                        <button type="button" id="firstForm" name="next" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md">Submit</button>
                     </div>
                 </fieldset>
 
@@ -52,7 +52,7 @@
                         <input type="password" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="confirm_pin" id="confirm_pin" required value="" placeholder="Confirm PIN" />
                     </div>
                     <div class="mt-lg flex justify-end">
-                        <button type="button" id="secondForm" name="next" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors">Submit</button>
+                        <button type="button" id="secondForm" name="next" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md">Submit</button>
                     </div>
                 </fieldset>
 
@@ -66,7 +66,7 @@
                         <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-center tracking-widest text-lg" name="otp" id="otp" required value="" placeholder="Enter OTP here">
                     </div>
                     <div class="mt-lg flex justify-end">
-                        <button type="button" id="thirdForm" name="next" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full sm:w-auto">Submit</button>
+                        <button type="button" id="thirdForm" name="next" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md w-full sm:w-auto">Submit</button>
                     </div>
                     <div class="mt-8 p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
                         <p class="text-sm text-on-surface-variant text-center">Entering the wrong OTP more than 3 times will lead to suspension of the account. If you have any problems with acquiring the OTP, please contact your account Officer or visit our nearest branch.</p>

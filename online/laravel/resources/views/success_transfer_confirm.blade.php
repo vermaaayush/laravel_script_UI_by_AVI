@@ -22,8 +22,8 @@ $config = DB::table('configs')->where('id', 1)->first();
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        primary: '#b34020',
-                        'primary-hover': '#98361b',
+                        primary: '#c59b27',
+                        'primary-hover': '#dfbb58',
                     }
                 }
             }
@@ -87,7 +87,7 @@ $config = DB::table('configs')->where('id', 1)->first();
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="/online" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm">
+                    <a href="{{ url('index') }}" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#c59b27] hover:bg-[#b0871d] text-black text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md">
                         <span class="material-symbols-outlined text-[16px]">dashboard</span> Return to Client Area
                     </a>
                 </div>
@@ -100,7 +100,7 @@ $config = DB::table('configs')->where('id', 1)->first();
                     <p class="text-xs text-slate-400 max-w-sm mx-auto mb-6">
                         No active transfer session was detected. If you completed a payment, please inspect your transaction ledger.
                     </p>
-                    <a href="/online" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
+                    <a href="{{ url('index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#c59b27] hover:bg-[#b0871d] text-black text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md">
                         <span class="material-symbols-outlined text-[16px]">arrow_back</span> Return to Dashboard
                     </a>
                 </div>

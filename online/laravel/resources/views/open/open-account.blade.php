@@ -22,10 +22,10 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#b34020",
-                        "surface-container-low": "#fff8f5",
-                        "on-surface": "#4a2a22",
-                        "on-surface-variant": "#7a5e55"
+                        primary: "#c59b27",
+                        "surface-container-low": "#faf8f2",
+                        "on-surface": "#0f131a",
+                        "on-surface-variant": "#5f6b7c"
                     }
                 }
             }
@@ -113,18 +113,18 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #fff8f5;
-            color: #4a2a22;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f8f9fb;
+            color: #0f131a;
         }
-        .bg-[#b34020] { background: #b34020 !important; }
-        .btn-primary { background: #b34020 !important; border-color: #b34020 !important; color: #fff !important; }
-        .btn-primary:hover, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active { background: #993311 !important; border-color: #993311 !important; }
-        .btn-default { background: #ffebe4 !important; border-color: #ffebe4 !important; color: #4a2a22 !important; }
-        .stepwizard-row:before { background-color: #fcece8 !important; }
-        .text-primary { color: #b34020 !important; }
+        .bg-[#b34020] { background: #0f131a !important; border: 1px solid rgba(197, 155, 39, 0.3) !important; border-radius: 16px !important; }
+        .btn-primary { background: linear-gradient(135deg, #dfbb58 0%, #c59b27 100%) !important; border-color: #c59b27 !important; color: #0a0e17 !important; font-weight: 700 !important; }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active { background: linear-gradient(135deg, #e9c668 0%, #d4aa33 100%) !important; border-color: #d4aa33 !important; color: #000 !important; }
+        .btn-default { background: #faf8f2 !important; border-color: #ebd9ab !important; color: #9c7614 !important; }
+        .stepwizard-row:before { background-color: #ebd9ab !important; }
+        .text-primary { color: #c59b27 !important; }
         .btn-circle { display: flex; align-items: center; justify-content: center; padding: 0; }
-        h1, h2, h3, h4, h5, h6 { color: #4a2a22; }
+        h1, h2, h3, h4, h5, h6 { color: #0f131a; }
         fieldset.row { align-items: flex-start; }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

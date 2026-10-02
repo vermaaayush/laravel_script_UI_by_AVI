@@ -27,6 +27,8 @@ yarn-error.log
 # System & Editor Files
 .DS_Store
 Thumbs.db
-desktop.ini
-.idea/
-.vscode/
+# Archives & Backups
+*.zip
+*.tar.gz
+*.rar
+*.7z

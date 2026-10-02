@@ -17,7 +17,7 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f8f9fb;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(179, 64, 32, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 10% 20%, rgba(197, 155, 39, 0.06) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(15, 19, 26, 0.04) 0%, transparent 40%);
             color: #0f131a;
             margin: 0;
@@ -44,32 +44,37 @@
 
         .auth-sidebar {
             width: 42%;
-            background: #0f131a;
+            background-image: url('{{ asset("images/auth_luxury_banner.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
             color: #ffffff;
-            padding: 44px 36px;
+            padding: 34px 28px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(197, 155, 39, 0.25);
         }
 
         .auth-sidebar::before {
             content: '';
             position: absolute;
-            top: -30%;
-            right: -30%;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(179, 64, 32, 0.35) 0%, transparent 70%);
-            filter: blur(40px);
-            pointer-events: none;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10, 14, 23, 0.45) 0%, rgba(10, 14, 23, 0.90) 100%);
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        .auth-sidebar > * {
+            position: relative;
+            z-index: 2;
         }
 
         .auth-main {
             width: 58%;
-            padding: 44px 40px;
+            padding: 36px 34px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -94,7 +99,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #d25a3a;
+            color: #dfbb58;
             margin-bottom: 8px;
         }
 
@@ -170,22 +175,22 @@
 
         .form-control-custom:focus {
             background: #ffffff;
-            border-color: #b34020;
-            box-shadow: 0 0 0 4px rgba(179, 64, 32, 0.1);
+            border-color: #c59b27;
+            box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
         }
 
         .btn-brand-primary {
             width: 100%;
             height: 48px;
-            background: linear-gradient(135deg, #b34020 0%, #8c2d13 100%);
+            background: linear-gradient(135deg, #dfbb58 0%, #c59b27 50%, #9c7614 100%);
             border: none;
             border-radius: 12px;
-            color: #ffffff;
+            color: #0a0e17;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 6px 18px rgba(179, 64, 32, 0.25);
+            box-shadow: 0 4px 14px rgba(197, 155, 39, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -195,7 +200,8 @@
 
         .btn-brand-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 10px 22px rgba(179, 64, 32, 0.35);
+            box-shadow: 0 8px 20px rgba(197, 155, 39, 0.4);
+            background: linear-gradient(135deg, #e9c668 0%, #d4aa33 50%, #aa821c 100%);
         }
 
         .quick-nav-box {
@@ -226,10 +232,10 @@
             justify-content: center;
             gap: 6px;
             padding: 8px 12px;
-            background: #fdfaf8;
-            border: 1px solid #fae1d9;
+            background: #faf8f2;
+            border: 1px solid #ebd9ab;
             border-radius: 10px;
-            color: #b34020;
+            color: #9c7614;
             font-size: 12px;
             font-weight: 600;
             text-decoration: none;
@@ -237,8 +243,8 @@
         }
 
         .quick-nav-btn:hover {
-            background: #fbf0ec;
-            color: #8c2d13;
+            background: #f4ecda;
+            color: #7b5b08;
             text-decoration: none;
         }
 

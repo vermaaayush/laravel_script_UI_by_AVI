@@ -48,7 +48,7 @@
       <!-- main wrapper row -->
       <div class="row no-gutters height-self-center">
         <!-- main wrapper col -->
-        <div class="col-sm-12 align-self-center bg-[#b34020] rounded mb-5">
+        <div class="col-sm-12 align-self-center bg-[#0f131a] border border-[#c59b27]/30 shadow-2xl rounded-2xl mb-5">
           <!-- main row -->
           <div class="row m-0 ">
             <div class="col-12 py-3">

@@ -15,7 +15,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: #f8f9fb;
             background-image: 
-                radial-gradient(circle at 15% 20%, rgba(179, 64, 32, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 15% 20%, rgba(197, 155, 39, 0.08) 0%, transparent 40%),
                 radial-gradient(circle at 85% 80%, rgba(15, 19, 26, 0.04) 0%, transparent 40%);
             color: #0f131a;
             min-height: 100vh;
@@ -35,21 +35,21 @@
             text-align: center;
         }
         .btn-brand-primary {
-            background: linear-gradient(135deg, #b34020 0%, #8c2d13 100%);
+            background: linear-gradient(135deg, #dfbb58 0%, #c59b27 100%);
             border: none;
             border-radius: 12px;
-            color: #ffffff;
+            color: #0f131a;
             font-size: 14px;
             font-weight: 700;
             padding: 12px 28px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 6px 18px rgba(179, 64, 32, 0.25);
+            box-shadow: 0 6px 18px rgba(197, 155, 39, 0.25);
         }
         .btn-brand-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 10px 22px rgba(179, 64, 32, 0.35);
-            color: #ffffff;
+            box-shadow: 0 10px 22px rgba(197, 155, 39, 0.35);
+            color: #000000;
         }
     </style>
 </head>
@@ -60,7 +60,7 @@
 
 <section class="w-100">
     <div class="verify-card">
-        <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #b34020 0%, #8c2d13 100%); color: #fff; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(179, 64, 32, 0.25);">
+        <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #dfbb58 0%, #c59b27 100%); color: #0f131a; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(197, 155, 39, 0.25);">
             <span class="material-symbols-outlined" style="font-size: 26px;">mark_email_read</span>
         </div>
         

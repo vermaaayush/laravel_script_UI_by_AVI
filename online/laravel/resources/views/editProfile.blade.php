@@ -54,7 +54,7 @@
                         </div>
                         
                         <div class="mt-lg flex justify-end">
-                            <button type="submit" id="verify" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors flex items-center gap-2">
+                            <button type="submit" id="verify" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
                                 <span>Verify</span>
                             </button>
                         </div>
@@ -138,7 +138,7 @@
                         </div>
                         
                         <div class="mt-lg flex justify-end">
-                            <button type="submit" id="verify" class="bg-[#b34020] hover:bg-[#b34020]/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors flex items-center gap-2">
+                            <button type="submit" id="verify" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
                                 <span>Save Changes</span>
                             </button>
                         </div>

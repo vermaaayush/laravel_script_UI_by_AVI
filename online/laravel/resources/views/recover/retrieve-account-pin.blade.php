@@ -1,182 +1,388 @@
-@extends('layouts.stack')
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ $bankName ?? 'Equitable Bank' }} - Retrieve PIN</title>
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fb;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(197, 155, 39, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(15, 19, 26, 0.04) 0%, transparent 40%);
+            color: #0f131a;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-@section('content')
-  <style type="text/css">
-    .ui-widget-content {
-      border: 1px solid var(--iq-border-light);
-      background: #fff !important;
-      color: #1e3d73;
-    }
+        .auth-container {
+            width: 100%;
+            max-width: 860px;
+        }
 
-    .online-support {
-      margin-top: 10px;
-    }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px -15px rgba(15, 19, 26, 0.08), 0 0 0 1px rgba(226, 230, 237, 0.9);
+            overflow: hidden;
+            display: flex;
+            min-height: 520px;
+        }
 
-    .online-support h3 {
-      background: #fe517e;
-      color: #fff;
-      padding-left: 15px;
-      margin-bottom: 10px;
-      border:1px solid transparent;
-      box-shadow: 0px 2px 5px 2px rgba(0,0,0,0.1)
-    }
+        .auth-sidebar {
+            width: 42%;
+            background-image: url('{{ asset("images/auth_luxury_banner.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            color: #ffffff;
+            padding: 34px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(197, 155, 39, 0.25);
+        }
 
-    .online-support .btn-link {
-      color:#fff;
-      border-bottom: 1px solid #fff;
-      border-radius: 0px;
-    }
+        .auth-sidebar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10, 14, 23, 0.45) 0%, rgba(10, 14, 23, 0.90) 100%);
+            border-radius: 20px;
+            z-index: 1;
+        }
 
-    .input-group-text {
-      font-size: 20px;
-    }
-  </style>
+        .auth-sidebar > * {
+            position: relative;
+            z-index: 2;
+        }
 
-  <!-- loader Start -->
-  <div id="loading">
-    <div id="loading-center">
-    </div>
-  </div>
-  <!-- loader END -->
+        .auth-main {
+            width: 58%;
+            padding: 36px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+        }
 
-  <!-- Sign in Start -->
-  <section class="sign-in-page">
-      <div class="container p-0">
-        <div class="row no-gutters height-self-center">
-          <div class="col-sm-12 align-self-center bg-[#b34020] rounded">
-            <div class="row m-0">
-              <div class="col-md-8 bg-white sign-in-page-data">
-                <div class="sign-in-from">
-                  <h3 class="mb-0 text-center">
-                    Bank Account - Retrive Account PIN
-                  </h3>
-                  <p class="text-center text-dark">
-                    {{ $bankName }} Bank Account Registration
-                  </p>
+        @media (max-width: 820px) {
+            .auth-card { flex-direction: column; }
+            .auth-sidebar { width: 100%; padding: 30px; }
+            .auth-main { width: 100%; padding: 30px 24px; }
+        }
 
-                  <div class="flex flex-wrap -mx-3">
-                    <div class="col-12 text-dark">
-                      <form id="form-wizard1" class="text-center mt-6">
-                        <!-- fieldsets -->
-                        <fieldset class="text-center">
-                          <div class="form-card text-left">
-                            <div class="row justify-content-center">
-                              <div class="col-md-6 col-sm-8 mb-6">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">
-                                  Your Username
-                                </label>
-                                <input
-                                  type=""
-                                  name="ib_username"
-                                  class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                  id="validationCustom06" />
-                                <div class="valid-feedback">
-                                  <!-- Looks good! -->
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            id="checkUsrName"
-                            type="button"
-                            name="next"
-                            class="
-                            btn
-                            btn-primary
-                            next
-                            action-button"
-                            value="Next">
-                            Submit
-                          </button>
-                        </fieldset>
+        .brand-logo-img {
+            max-height: 38px;
+            max-width: 180px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
 
-                        <fieldset class="text-center">
-                          <div class="form-card text-left">
-                            <div class="row justify-content-center">
-                                <div class="col-md-6 col-sm-8 mb-6">
-                                  <label class="block text-sm font-semibold text-on-surface-variant mb-2">New Account PIN</label>
-                                  <input type="" name="ib_pin" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="validationCustom06">
-                                  <div class="valid-feedback">
-                                      <!-- Looks good! -->
-                                  </div>
-                                </div>
-                                <div class="col-md-6 col-sm-8 mb-6">
-                                  <label class="block text-sm font-semibold text-on-surface-variant mb-2">Confirm Account PIN</label>
-                                  <input type="" name="ib_ac_c_pin" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="validationCustom06">
-                                  <div class="valid-feedback">
-                                      <!-- Looks good! -->
-                                  </div>
-                                </div>
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #dfbb58;
+            margin-bottom: 8px;
+        }
 
-                            </div>
-                          </div>
-                          <button id="genUserPin" type="button" name="next" class="btn btn-primary next action-button " value="Next">Next</button>
-                                <button type="button" name="previous" class="btn btn-dark previous action-button-previous  mr-3" value="Previous">Previous</button>
-                        </fieldset>
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1.25;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
 
-                        <fieldset class="text-center">
-                          <div class="form-card text-left">
-                                  <div class="flex flex-wrap -mx-3">
-                                      <div class="col-12">
-                                        <h3 class="text-center">Enter OTP</h3>
-                                        <p class="text-center">We have sent you Token OTP via Email xxxxxxxx@gmail.com ! Please add OTP to proceed!</p>
+        .hero-desc {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.55;
+            margin: 0;
+        }
 
-                                      </div>
-                                  </div>
-                                  <div class="row justify-content-center">
-                                      <div class="w-full md:w-1/2 px-3">
-                                        <div class="mb-6">
-                                            <!-- <label class="block text-sm font-semibold text-on-surface-variant mb-2">First Name: *</label> -->
-                                            <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="fname" placeholder="Enter OTP here">
-                                        </div>
-                                      </div>
-                                  </div>
-                                </div>
-                                <button type="button" name="next" class="btn btn-primary next action-button " value="Next">Next</button>
-                                <button type="button" name="previous" class="btn btn-dark previous action-button-previous  mr-3" value="Previous">Previous</button>
-                                <div class="clearfix"></div>
-                                <p class="text-center">Entering the wrong OTP more than 3 times will lead to suspension of the account.<br> If you have any problems with acquiring the OTP, Please contact your account Officer, <br>or visit our nearest Branch</p>
-                        </fieldset>
+        .security-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
 
-                        <fieldset >
-                            <div class="form-card">
-                              <br><br>
-                              <h2 class="text-secondary text-center"><strong>SUCCESS !</strong></h2>
-                              <br>
-                              <div class="row justify-content-center">
-                                  <div class="col-lg-2 col-md-3 col-sm-5 col-5"> <img src="images/page-img/img-success.png" class="fit-image" alt="fit-image"> </div>
-                              </div>
-                              <br><br>
-                            </div>
-                        </fieldset>
-                      </form>
-                    </div>
-                  </div>
+        .form-heading {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f131a;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .form-subtext {
+            font-size: 13.5px;
+            color: #5f6b7c;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .form-group-custom {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-label-custom {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #2b3545;
+            margin-bottom: 6px;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            height: 46px;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f131a;
+            background: #f8f9fb;
+            border: 1.5px solid #e2e6ed;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-control-custom:focus {
+            background: #ffffff;
+            border-color: #c59b27;
+            box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
+        }
+
+        .btn-brand-primary {
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(135deg, #dfbb58 0%, #c59b27 50%, #9c7614 100%);
+            border: none;
+            border-radius: 12px;
+            color: #0a0e17;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(197, 155, 39, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-brand-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(197, 155, 39, 0.4);
+            background: linear-gradient(135deg, #e9c668 0%, #d4aa33 50%, #aa821c 100%);
+        }
+
+        .quick-nav-box {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid #eef1f5;
+        }
+
+        .quick-nav-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8b949e;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .quick-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .quick-nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #faf8f2;
+            border: 1px solid #ebd9ab;
+            border-radius: 10px;
+            color: #9c7614;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .quick-nav-btn:hover {
+            background: #f4ecda;
+            color: #7b5b08;
+            text-decoration: none;
+        }
+
+        .quick-nav-btn.full {
+            grid-column: span 2;
+        }
+
+        .notice-card {
+            background: #fff8f6;
+            border: 1px solid #f9d7cf;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 12px;
+            color: #8c2d13;
+            line-height: 1.5;
+            margin-top: 14px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            
+            <!-- Left Brand Sidebar -->
+            <div class="auth-sidebar">
+                <div>
+                    <img src="//{{ isset($bank_url) ? $bank_url : Session::get('bank_url') }}/admin/uploads/{{ $logo }}" onerror="this.src='images/logo-full.png';" class="brand-logo-img" alt="Logo">
                 </div>
-              </div>
-            <div class="col-sm-6 col-md-4 text-center sign-in-page-image order-md-3">
-              <div class="sign-in-detail text-white">
-                <a class="sign-in-logo mb-5" href="#"><img src="images/logo-full.png" class="img-fluid" alt="logo"></a>
+                
+                <div class="my-auto py-4">
+                    <div class="eyebrow">Credential Service</div>
+                    <h2 class="hero-title">Secure PIN Recovery</h2>
+                    <p class="hero-desc">Safeguard your accounts with authenticated self-service credential recovery and multi-tier cryptographic verification.</p>
+                </div>
 
-                    <div class="online-support">
-                    <h3>Registration Area</h3>
-                    <a href="{{ url('online-open-account') }}" class="btn btn-danger my-2 d-block">Apply for Account Opening</a>
-                    <a href="{{ url('register-new-internet-account') }}" class="btn btn-danger mb-2 d-block" target="_blank">Apply for Internet Banking Option</a>
-                    <a href="{{ url('retrieve-account-pin') }}" class="btn btn-danger d-block">Retrieve Account PIN</a>
-                    <a href="{{ url('retrieve-account-user-id') }}" class="btn btn-danger my-2 d-block"> Retrieve Account User ID</a>
-                  </div>
-              </div>
+                <div class="security-badge-pill">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">verified_user</span>
+                    <span>256-Bit SSL Encrypted Banking</span>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section><!--/ Sign in END -->
-@endsection
 
-@section('script')
-<script type="text/javascript">
-  jQuery("#load").fadeOut();
-  jQuery("#loading").delay().fadeOut("");
-</script>
-@endsection
+            <!-- Right Main Form -->
+            <div class="auth-main">
+                <h1 class="form-heading">Retrieve Account PIN</h1>
+                <p class="form-subtext">Enter your registered User ID to initiate secure PIN validation.</p>
+
+                @include('flash::message')
+
+                <form id="form-wizard1" class="text-center w-100" role="form" method="POST" action="retrieve-account-pin">
+                    @csrf
+                    
+                    @if(isset($otp) && $otp == 'show2')
+                    <!-- Step 3: Set New PIN -->
+                    <div class="text-left w-100">
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">New Account PIN</label>
+                            <input type="password" name="pin1" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" id="pin1" class="form-control-custom" placeholder="••••" maxlength="6" value='{{ $pin1 ?? '' }}' required>
+                        </div>
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">Confirm Account PIN</label>
+                            <input type="password" name="pin2" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" id="pin2" class="form-control-custom" placeholder="••••" maxlength="6" value='{{ $pin2 ?? '' }}' required>
+                        </div>
+                        <button type="submit" name="submit" id="pinsequal" class="btn-brand-primary" value="submitpin" style="visibility: hidden;">
+                            <span>Confirm & Set PIN</span>
+                            <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+                        </button>
+                        <script>
+                            setInterval(function() {
+                                var pin1 = document.querySelector("#pin1") ? document.querySelector("#pin1").value : "";
+                                var pin2 = document.querySelector("#pin2") ? document.querySelector("#pin2").value : "";
+                                if(pin1 === pin2 && pin1.length > 0){
+                                    document.querySelector('#pinsequal').style.visibility = 'visible';
+                                } else {
+                                    document.querySelector('#pinsequal').style.visibility = 'hidden';
+                                }
+                            }, 200);
+                        </script>
+                    </div>
+                    @endif
+
+                    @if(isset($otp) && ($otp == 'show' or $otp == 'show2'))
+                    <!-- Step 2: One-Time Password -->
+                    <div class="text-left w-100 mt-2">
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">Enter Email Security OTP</label>
+                            <input type="text" class="form-control-custom text-center" style="font-family: monospace; letter-spacing: 4px; font-size: 18px; font-weight: 700;" id="otpcode" name="otp" placeholder="000000" value="@if(isset($otp) && $otp == 'show2'){{ $otprequired ?? '' }}@endif" required>
+                        </div>
+                        <button type="submit" name="submit" id="otpsequal" class="btn-brand-primary" value="submitotp">
+                            <span>Verify Code</span>
+                            <span class="material-symbols-outlined" style="font-size: 18px;">key</span>
+                        </button>
+                        <div class="notice-card">
+                            <strong>Security Policy:</strong> 3 incorrect OTP entries will suspend account access for 24 hours. Contact your relationship officer if you did not request this OTP.
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Step 1: User ID -->
+                    <div class="text-left w-100">
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">Account User ID</label>
+                            <input type="text" name="user" class="form-control-custom" id="validationCustom06" placeholder="Enter your banking User ID" value='{{ $user ?? '' }}' required>
+                        </div>
+                        <button type="submit" name="submit" class="btn-brand-primary" value="Next">
+                            <span>Proceed to Verification</span>
+                            <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Navigation Links -->
+                <div class="quick-nav-box">
+                    <div class="quick-nav-title">Self-Service Hub</div>
+                    <div class="quick-nav-grid">
+                        <a href="{{ url('online-open-account') }}" class="quick-nav-btn">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">add_circle</span>
+                            <span>Open Account</span>
+                        </a>
+                        <a href="{{ url('login') }}" class="quick-nav-btn">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">login</span>
+                            <span>Client Sign In</span>
+                        </a>
+                        <a href="{{ url('retrieve-account-user-id') }}" class="quick-nav-btn full">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">person_search</span>
+                            <span>Forgot User ID? Retrieve Online</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        jQuery('div.alert').not('.alert-important').delay(10000).fadeOut(15000);
+    </script>
+</body>
+</html>

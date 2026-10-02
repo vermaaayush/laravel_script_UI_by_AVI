@@ -15,7 +15,7 @@
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
         <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">
-            <a class="hover:text-[#b34020] transition-colors" href="#">My Account</a>
+            <a class="hover:text-[#c59b27] transition-colors" href="#">My Account</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
             <span class="text-slate-800">Client Profile</span>
         </div>
@@ -160,11 +160,11 @@
                     </div>
 
                     <!-- Limit Banner -->
-                    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#b34020]/20 blur-2xl pointer-events-none"></div>
+                    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white relative overflow-hidden border border-slate-700">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#c59b27]/20 blur-2xl pointer-events-none"></div>
                         <div class="flex items-center justify-between relative z-10">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-[#d25a3a]">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 border border-[#c59b27]/30 flex items-center justify-center text-[#dfbb58]">
                                     <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
                                 </div>
                                 <div>

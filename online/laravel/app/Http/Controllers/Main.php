@@ -157,14 +157,15 @@ class Main extends Controller {
         }
 
         $user_info = DB::select('select * from ba_account_holders where user_id =?',[$request->session()->get('user_id')]);
-        $data['cust_name'] = $user_info[0]->cust_name.' '.$user_info[0]->middle_name.' '.$user_info[0]->sur_name;
-        $data['dob'] = $user_info[0]->dob;
-        $data['email'] = $user_info[0]->cust_mail;
-        $data['cust_phone'] = $user_info[0]->cust_phone;
-        $data['cust_phone_country_code'] = $user_info[0]->cust_countrycode;
-        $data['address'] = $user_info[0]->cust_address;
-        $data['postcode'] = $user_info[0]->post_code;
-        $data['country'] = $user_info[0]->cust_country;
+        $uInfo = !empty($user_info) ? $user_info[0] : null;
+        $data['cust_name'] = $uInfo ? trim(($uInfo->cust_name ?? '').' '.($uInfo->middle_name ?? '').' '.($uInfo->sur_name ?? '')) : 'Valued Client';
+        $data['dob'] = $uInfo->dob ?? '';
+        $data['email'] = $uInfo->cust_mail ?? '';
+        $data['cust_phone'] = $uInfo->cust_phone ?? '';
+        $data['cust_phone_country_code'] = $uInfo->cust_countrycode ?? '';
+        $data['address'] = $uInfo->cust_address ?? '';
+        $data['postcode'] = $uInfo->post_code ?? '';
+        $data['country'] = $uInfo->cust_country ?? '';
         $data['loan'] = DB::table('ba_loans')->orderby('id','desc')->where('user_id',$request->session()->get('user_id'))->first();
         $data['deposits'] = DB::table('ba_user_deposit')->where('user',$request->session()->get('user_id'))->orderby('id','desc')->limit(3)->get();
         $data['transactions'] = DB::table('ba_transactions')->where('user_id',$request->session()->get('user_id'))->orderby('id','desc')->limit(6)->get();
@@ -172,13 +173,13 @@ class Main extends Controller {
         $invoices = DB::table('ba_payments')->where('user',$request->session()->get('id'))->get();
         $paymentDue = 0;
         foreach($invoices as $inv){
-            $paymentDue += $inv->price - $inv->paid;
+            $paymentDue += ($inv->price ?? 0) - ($inv->paid ?? 0);
         }
         $data['pay_due']    = $paymentDue;
         
-        $data['btc_fund'] = $user_info[0]->btc_fund;
-        $data['eth_fund'] = $user_info[0]->eth_fund;
-        $data['usdt_fund'] = $user_info[0]->usdt_fund;
+        $data['btc_fund'] = $uInfo->btc_fund ?? '0.00';
+        $data['eth_fund'] = $uInfo->eth_fund ?? '0.00';
+        $data['usdt_fund'] = $uInfo->usdt_fund ?? '0.00';
       
         return view('index', $data);
     }
@@ -223,14 +224,15 @@ class Main extends Controller {
         }
 
         $user_info = DB::select('select * from ba_account_holders where user_id =?',[$request->session()->get('user_id')]);
-        $data['cust_name'] = $user_info[0]->cust_name.' '.$user_info[0]->middle_name.' '.$user_info[0]->sur_name;
-        $data['dob'] = $user_info[0]->dob;
-        $data['email'] = $user_info[0]->cust_mail;
-        $data['cust_phone'] = $user_info[0]->cust_phone;
-        $data['cust_phone_country_code'] = $user_info[0]->cust_countrycode;
-        $data['address'] = $user_info[0]->cust_address;
-        $data['postcode'] = $user_info[0]->post_code;
-        $data['country'] = $user_info[0]->cust_country;
+        $uInfo = !empty($user_info) ? $user_info[0] : null;
+        $data['cust_name'] = $uInfo ? trim(($uInfo->cust_name ?? '').' '.($uInfo->middle_name ?? '').' '.($uInfo->sur_name ?? '')) : 'Valued Client';
+        $data['dob'] = $uInfo->dob ?? '';
+        $data['email'] = $uInfo->cust_mail ?? '';
+        $data['cust_phone'] = $uInfo->cust_phone ?? '';
+        $data['cust_phone_country_code'] = $uInfo->cust_countrycode ?? '';
+        $data['address'] = $uInfo->cust_address ?? '';
+        $data['postcode'] = $uInfo->post_code ?? '';
+        $data['country'] = $uInfo->cust_country ?? '';
         $data['loan'] = DB::table('ba_loans')->orderby('id','desc')->where('user_id',$request->session()->get('user_id'))->first();
         $data['deposits'] = DB::table('ba_user_deposit')->where('user',$request->session()->get('user_id'))->orderby('id','desc')->limit(3)->get();
         $data['transactions'] = DB::table('ba_transactions')->where('user_id',$request->session()->get('user_id'))->orderby('id','desc')->limit(6)->get();
@@ -238,13 +240,13 @@ class Main extends Controller {
         $invoices = DB::table('ba_payments')->where('user',$request->session()->get('id'))->get();
         $paymentDue = 0;
         foreach($invoices as $inv){
-            $paymentDue += $inv->price - $inv->paid;
+            $paymentDue += ($inv->price ?? 0) - ($inv->paid ?? 0);
         }
         $data['pay_due']    = $paymentDue;
         
-        $data['btc_fund'] = $user_info[0]->btc_fund;
-        $data['eth_fund'] = $user_info[0]->eth_fund;
-        $data['usdt_fund'] = $user_info[0]->usdt_fund;
+        $data['btc_fund'] = $uInfo->btc_fund ?? '0.00';
+        $data['eth_fund'] = $uInfo->eth_fund ?? '0.00';
+        $data['usdt_fund'] = $uInfo->usdt_fund ?? '0.00';
       
         return view('portfolio', $data);
     }

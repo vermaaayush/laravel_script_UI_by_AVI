@@ -42,23 +42,23 @@
   <section class="sign-in-page">
     <div class="container p-0">
       <div class="row no-gutters height-self-center">
-        <div class="col-sm-12 align-self-center bg-[#b34020] rounded">
+        <div class="col-sm-12 align-self-center bg-[#0f131a] border border-[#c59b27]/30 shadow-2xl rounded-2xl">
           <div class="row m-0">
             <div class="col-md-8 bg-white sign-in-page-data">
               <div class="sign-in-from">
-                <h1 class="mb-0 text-center">Account Registration</h1>
-                <p class="text-center text-dark">
+                <h1 class="mb-0 text-center font-bold text-slate-900">Account Registration</h1>
+                <p class="text-center text-slate-500 mb-4">
                   {{ $bankName }} Bank Account Registration
                 </p>
                 <div class="flex flex-wrap -mx-3">
-                  <div class="col-12 text-dark">
-                    <h3 class="text-center pb-4">How to register</h3>
+                  <div class="col-12 text-slate-700">
+                    <h3 class="text-center pb-4 font-bold text-slate-900">How to register</h3>
                     <p>
                       <strong>
                         Registering for online servicing is easy and only takes a few minutes. You will need:
                       </strong>
                     </p>
-                    <ul>
+                    <ul class="list-disc pl-5 my-3 space-y-1">
                       <li>Your name and address</li>
                       <li>
                         The sort code or account number of an existing account you have with us -or- Your existing Bank SA Card number (For Card account)
@@ -70,11 +70,12 @@
                     <p>
                       Once you have completed the registration process you will need to activate your account. You will receive an activation letter before the next 7 days. Upon receipt you will be able to complete the easy to follow activation process by following the instructions on the letter.
                     </p>
-                    <div class="text-center">
+                    <div class="text-center mt-6">
                       <a
                         href="{{ url('new-account-steps') }}"
-                        class="bg-error hover:bg-error/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3.5 px-8 rounded-xl transition-all shadow-md inline-flex items-center justify-center gap-2">
                         Continue
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
                       </a>
                     </div>
                   </div>
