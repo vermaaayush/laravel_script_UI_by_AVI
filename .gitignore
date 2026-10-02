@@ -1,0 +1,32 @@
+# Dependencies (matches anywhere)
+vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment & Secrets (matches anywhere)
+.env
+.env.*
+!.env.example
+*.key
+
+# Laravel Storage & Framework Cache (matches anywhere)
+**/storage/framework/cache/data/*
+**/storage/framework/sessions/*
+**/storage/framework/views/*
+**/storage/logs/*
+!**/storage/framework/cache/.gitkeep
+!**/storage/framework/sessions/.gitkeep
+!**/storage/framework/views/.gitkeep
+!**/storage/logs/.gitkeep
+
+# Logs and temporary files
+*.log
+.phpunit.result.cache
+
+# System & Editor Files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/

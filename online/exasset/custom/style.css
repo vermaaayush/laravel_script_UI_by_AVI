@@ -1,0 +1,17 @@
+.paginate_button {
+    display: inline-block;
+    margin-right: 0;
+    padding: 3px 10px;
+    border: solid 1px #ccc;
+    cursor: pointer;
+}
+
+.dataTables_paginate .disabled {
+    cursor: not-allowed;
+}
+
+.dataTables_paginate .current{
+    cursor: default;
+    background : #1e3d73;
+    color:#fff;
+}

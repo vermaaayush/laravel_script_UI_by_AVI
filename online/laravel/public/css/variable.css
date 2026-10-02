@@ -1,0 +1,56 @@
+/*------------- Variable ------------*/
+
+:root {
+  --iq-title-text: #4a2a22;
+  --iq-body-text: #7a5e55;
+  --iq-body-bg: #fff8f5;
+  --iq-primary: #b34020;
+  --iq-secondary: #e4b8a9;
+  --iq-success: #8bb35e;
+  --iq-warning: #eebb55;
+  --iq-danger: #d9534f;
+  --iq-info: #eebf88;
+  --iq-dark: #4a2a22;
+  --iq-light: #ffebe4;
+  --iq-white: #ffffff;
+  --iq-black: #000000;
+  --iq-light-primary: #fcece8;
+  --iq-light-secondary: #fdf5f2;
+  --iq-light-success: #f0faeb;
+  --iq-light-danger: #fdf1f0;
+  --iq-light-warning: #fcf9e8;
+  --iq-light-info: #fef8f0;
+  --iq-light-dark: #f0ecea;
+  --iq-primary-hover: #993311;
+  --iq-secondary-hover: #d39d89;
+  --iq-success-hover: #7ea454;
+  --iq-danger-hover: #c9302c;
+  --iq-warning-hover: #e0a83e;
+  --iq-info-hover: #e3ae6f;
+  --iq-dark-hover: #3a2019;
+  --iq-border-light: #fbe5dd;
+  --iq-light-card: #ffffff;
+  --iq-primary-rgb: 179,64,32;
+
+  /* color for customizer*/
+  --iq-color1: #b34020;
+  --iq-color2: #8bb35e;
+  --iq-color3: #eebb55;
+  --iq-color4: #d9534f;
+  --iq-color5: #eebf88;
+  --iq-color6: #4a2a22;
+  --iq-color7: #e4b8a9;
+  --iq-color8: #ffebe4;
+  --iq-color9: #fff8f5;
+  --iq-color10: #fcece8;
+  --iq-color11: #fdf5f2;
+  --iq-color12: #f0faeb;
+  --iq-color13: #fdf1f0;
+  --iq-color14: #fcf9e8;
+  --iq-color15: #fef8f0;
+  --iq-color16: #f0ecea;
+  --iq-color17: #993311;
+  --iq-color18: #d39d89;
+  --iq-color19: #7ea454;
+  --iq-color20: #c9302c;
+}
