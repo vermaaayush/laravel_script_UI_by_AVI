@@ -1,34 +1,45 @@
- <!-- Header -->
+<!-- Header -->
 @include('header')
- <!-- // Header -->
+<!-- // Header -->
 
- <!-- Sidebar -->
+<!-- Sidebar -->
 @include('sidebar')
- <!-- //  Sidebar -->
+<!-- //  Sidebar -->
 
- <!-- top navbar -->
+<!-- top navbar -->
 @include('topNav')
- <!-- // top navbar -->
-
+<!-- // top navbar -->
 
 <!-- Main Content Wrapper -->
-<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
-    <div class="mb-lg">
-        <div class="flex items-center gap-sm text-on-surface-variant text-body-md font-body-md mb-xs">
-            <a class="hover:text-primary transition-colors" href="#">My Account</a>
-            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-            <span class="text-on-surface font-medium"><?php if($type == 'update'){ ?>Verify User<?php }else{ ?>Update Profile Information<?php } ?></span>
+    <div class="mb-8">
+        <div class="flex items-center gap-2 text-xs font-semibold text-[#53625b] uppercase tracking-wider mb-2">
+            <a class="hover:text-[#004226] transition-colors" href="{{ url('viewProfile') }}">Identity Overview</a>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-[#191c1c] font-bold"><?php if($type == 'update'){ ?>Security Verification<?php }else{ ?>Modify Information<?php } ?></span>
         </div>
-        <h2 class="text-display-lg font-display-lg text-on-surface mb-xs"><?php if($type == 'update'){ ?>Verify User<?php }else{ ?>Update Profile<?php } ?></h2>
-        <p class="text-body-lg font-body-lg text-on-surface-variant">Update and manage your personal account information.</p>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold font-headline text-[#191c1c] tracking-tight">
+                    <?php if($type == 'update'){ ?>Identity Verification Challenge<?php }else{ ?>Update Legal Profile<?php } ?>
+                </h1>
+                <p class="text-sm text-[#53625b] mt-1">Manage and certify personal custody identification metadata under banking regulations.</p>
+            </div>
+            <a href="{{ url('viewProfile') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#f2f4f3] hover:bg-[#e6e9e8] text-[#191c1c] text-xs font-bold transition-all">
+                <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                <span>Back to Profile</span>
+            </a>
+        </div>
         
-        @include('flash::message')
+        <div class="mt-4">
+            @include('flash::message')
+        </div>
     </div>
 
     <!-- Main Container -->
-    <div class="bg-surface rounded-2xl shadow-level-1 border border-outline-variant/30 mb-lg overflow-hidden">
-        <div class="p-lg">
+    <div class="bg-white rounded-2xl shadow-sm border border-[#e6e9e8] mb-8 overflow-hidden">
+        <div class="p-6 sm:p-8">
             <?php if($type == 'update'){ ?>
                 <form action="editProfileVerify" class="profile-update-form" method="post">
                     <fieldset>
@@ -45,17 +56,24 @@
                         <input type="hidden" name="post_code" value="<?php echo $post_code ?>" />
                         <input type="hidden" name="max_amount" value="<?php echo $max_amount ?>" />
                         <input type="hidden" name="cust_phone" value="<?php echo $cust_phone ?>" />
-                        <input type="hidden" name="cust_countrycode" value="<?php echo $cust_countrycode ?>" />
+                        <input type="hidden" name="cust_countrycode" value="<?php echo $cust_countrycode ?? ($customer[0]->cust_countrycode ?? '') ?>" />
                         <input type="hidden" name="redType" value="old" />
                         
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-on-surface-variant mb-2">Enter Verification Code</label>
-                            <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-center tracking-widest text-lg" name="otp" required value="" placeholder="Enter Code">
-                        </div>
-                        
-                        <div class="mt-lg flex justify-end">
-                            <button type="submit" id="verify" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
-                                <span>Verify</span>
+                        <div class="max-w-md mx-auto py-6 text-center">
+                            <div class="w-16 h-16 rounded-2xl bg-[#e8f7ee] border border-[#aaf2c4] text-[#004226] flex items-center justify-center mx-auto mb-4">
+                                <span class="material-symbols-outlined text-[32px]">shield</span>
+                            </div>
+                            <h3 class="text-lg font-bold font-headline text-[#191c1c] mb-2">Two-Factor Authorization</h3>
+                            <p class="text-xs text-[#53625b] mb-6">A one-time cryptographic authorization token has been dispatched to your verified communication channel. Please authorize to persist profile alterations.</p>
+                            
+                            <div class="mb-6 text-left">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Security Verification Token</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3.5 px-4 text-[#191c1c] font-mono tracking-widest text-center text-lg outline-none transition-all placeholder-[#53625b]/40" name="otp" required value="" placeholder="• • • • • •" autocomplete="one-time-code">
+                            </div>
+                            
+                            <button type="submit" id="verify" class="w-full bg-[#004226] hover:bg-[#0f5b38] text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">verified</span>
+                                <span>Authorize & Apply Changes</span>
                             </button>
                         </div>
                     </fieldset>
@@ -66,80 +84,84 @@
                         <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
                         <input type="hidden" name="redType" value="new" />
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Full Name</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_name" required value="{{ $customer[0]->cust_name }} {{$customer[0]->middle_name}} {{$customer[0]->sur_name}}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Legal Entity / Full Name</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="cust_name" required value="{{ $customer[0]->cust_name }} {{$customer[0]->middle_name}} {{$customer[0]->sur_name}}">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Social Security / National ID Number</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="idnumber" required value="{{ $customer[0]->idnumber }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">National ID / Passport Number</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-mono font-semibold text-[#191c1c] outline-none transition-all" name="idnumber" required value="{{ $customer[0]->idnumber ?? '' }}">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Date of Birth</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_dob" required value="{{ $customer[0]->dob }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Date of Birth (YYYY-MM-DD)</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-mono font-semibold text-[#191c1c] outline-none transition-all" name="cust_dob" required value="{{ $customer[0]->dob ?? '' }}">
                             </div>
                             
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Mother's Maiden Name</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="mother_maiden" required value="{{ $customer[0]->mother_maiden }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Mother's Maiden Name</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="mother_maiden" required value="{{ $customer[0]->mother_maiden ?? '' }}">
                             </div>
                             
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Email Address</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_mail" required value="{{ $customer[0]->cust_mail }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Primary Registered Email</label>
+                                <input type="email" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="cust_mail" required value="{{ $customer[0]->cust_mail ?? ($customer[0]->cust_email ?? '') }}">
                             </div>
                             
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Phone</label>
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Telephone Number</label>
                                 <div class="flex gap-2">
-                                    <select class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-1/3 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_countrycode" id="code" required >
+                                    <select class="w-1/3 bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-3 text-xs font-semibold text-[#191c1c] outline-none transition-all cursor-pointer" name="cust_countrycode" id="code" required >
                                     </select>
-                                    <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-2/3 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all numbers" name="cust_phone" id="phone" value="{{ $customer[0]->cust_phone }}" required>
+                                    <input type="text" class="w-2/3 bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-mono font-semibold text-[#191c1c] outline-none transition-all numbers" name="cust_phone" id="phone" value="{{ $customer[0]->cust_phone ?? '' }}" required>
                                 </div>
                             </div>
                             
                             <div class="md:col-span-2">
-                                <div class="w-full border-t border-surface-container-high my-4"></div>
+                                <div class="w-full border-t border-[#f2f4f3] my-2"></div>
                             </div>
                             
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Residential Address</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_address" required value="{{ $customer[0]->cust_address }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Street Address</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="cust_address" required value="{{ $customer[0]->cust_address ?? '' }}">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">City</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_city" required value="{{ $customer[0]->cust_city }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">City</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="cust_city" required value="{{ $customer[0]->cust_city ?? '' }}">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">State</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_state" required value="{{ $customer[0]->cust_state }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">State / Province / Canton</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-semibold text-[#191c1c] outline-none transition-all" name="cust_state" required value="{{ $customer[0]->cust_state ?? '' }}">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Country</label>
-                                <select class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="cust_country" id="country" required>
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Country / Jurisdiction</label>
+                                <select class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-xs font-semibold text-[#191c1c] outline-none transition-all cursor-pointer" name="cust_country" id="country" required>
                                 </select>
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-on-surface-variant mb-2">Zip Code</label>
-                                <input type="text" class="bg-surface-container-low border border-transparent rounded-lg py-3 px-4 w-full text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" name="post_code" required value="{{ $customer[0]->post_code }}">
+                                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Postal / Zip Code</label>
+                                <input type="text" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 px-4 text-sm font-mono font-semibold text-[#191c1c] outline-none transition-all" name="post_code" required value="{{ $customer[0]->post_code ?? '' }}">
                             </div>
 
                             <!-- Hidden Max Withdrawal Amount -->
                             <div style="display:none;">
-                                <input type="text" name="max_amount" required value="{{ $customer[0]->max_amount }}">
+                                <input type="text" name="max_amount" required value="{{ $customer[0]->max_amount ?? 50000 }}">
                             </div>
                         </div>
                         
-                        <div class="mt-lg flex justify-end">
-                            <button type="submit" id="verify" class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
-                                <span>Save Changes</span>
+                        <div class="mt-8 pt-6 border-t border-[#f2f4f3] flex items-center justify-end gap-4">
+                            <a href="{{ url('viewProfile') }}" class="px-6 py-3 rounded-xl border border-[#e6e9e8] text-[#53625b] hover:bg-[#f8faf9] text-xs font-bold transition-all">
+                                Cancel
+                            </a>
+                            <button type="submit" id="verify" class="bg-[#004226] hover:bg-[#0f5b38] text-white font-bold py-3 px-8 rounded-xl transition-all shadow-sm flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">save</span>
+                                <span>Save & Submit Changes</span>
                             </button>
                         </div>
                     </fieldset>
@@ -220,7 +242,7 @@ var codes = {"AF":{"country":"Afghanistan","dial_code":"93"},"AL":{"country":"Al
 "VE":{"country":"Venezuela","dial_code":"58"},"VN":{"country":"Vietnam","dial_code":"84"},"WF":{"country":"Wallis and Futuna","dial_code":"681"},
 "YE":{"country":"Yemen","dial_code":"967"},"ZM":{"country":"Zambia","dial_code":"260"},"ZW":{"country":"Zimbabwe","dial_code":"263"}};
 document.addEventListener('DOMContentLoaded', function(){
-    var content = '<option value="">Country</option>';
+    var content = '<option value="">Select Country</option>';
     for(var code in codes) {
         content += '<option value="'+codes[code].country+'">'+codes[code].country+'</option>';
     }
@@ -234,13 +256,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     $('#code').append(content);
     <?php if(isset($customer)){ ?>
-        $('#code').val('<?= $customer[0]->cust_countrycode ?>');
+        $('#code').val('<?= $customer[0]->cust_countrycode ?? ($cust_countrycode ?? '') ?>');
     <?php } ?>
     $('#code_confirm').append(content);
 });
 </script>
 
-
- <!-- footer -->
+<!-- footer -->
 @include('footer')
 <!-- // footer -->

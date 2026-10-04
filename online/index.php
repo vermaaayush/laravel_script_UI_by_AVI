@@ -1,5 +1,18 @@
 <?php
 
+// PHP 8.1+ compatibility: strip 'full_path' from $_FILES which breaks Symfony 4/5 FileBag
+if (!empty($_FILES)) {
+    $stripFullPath = function(&$files) use (&$stripFullPath) {
+        foreach ($files as &$file) {
+            if (is_array($file)) {
+                unset($file['full_path']);
+                $stripFullPath($file);
+            }
+        }
+    };
+    $stripFullPath($_FILES);
+}
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

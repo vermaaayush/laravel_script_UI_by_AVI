@@ -143,17 +143,28 @@ class Main extends Controller {
         //$notifaction=  new Controller();
         //$notifaction->user_notifactions($user_id);
 
-        $account = DB::table('ba_user_accounts')->where('user_id',$user_id)->inRandomOrder()->limit(1)->first();
+        $account = DB::table('ba_user_accounts')->where('user_id', $user_id)->orderBy('id', 'asc')->first();
+        $all_accounts = DB::table('ba_user_accounts')->where('user_id', $user_id)->orderBy('id', 'asc')->get();
+        $data['all_accounts'] = $all_accounts;
+
+        $totalBalance = 0;
+        foreach($all_accounts as $acc) {
+            $totalBalance += (float)($acc->available_balance ?? 0);
+        }
+        $data['total_balance'] = $totalBalance;
+
         if($account){
             $data['balance']    = $account->available_balance;
-            $data['currency']   = $account->account_currency;
-            $data['acno']       = "xxxxxxx".substr($account->account_no,-4);
-            $data['actype']     = $account->account_type;
+            $data['currency']   = $account->account_currency ?: 'USD';
+            $data['acno']       = "•••• ".substr($account->account_no, -4);
+            $data['full_acno']  = $account->account_no;
+            $data['actype']     = $account->account_type ?: 'Commercial Checking';
         }else{
-            $data['balance'] = 0.00;
-            $data['currency'] = "USD";
+            $data['balance']    = 0.00;
+            $data['currency']   = "USD";
             $data['acno']       = "N/A";
-            $data['actype']     = "";
+            $data['full_acno']  = "";
+            $data['actype']     = "Commercial Checking";
         }
 
         $user_info = DB::select('select * from ba_account_holders where user_id =?',[$request->session()->get('user_id')]);
@@ -168,7 +179,32 @@ class Main extends Controller {
         $data['country'] = $uInfo->cust_country ?? '';
         $data['loan'] = DB::table('ba_loans')->orderby('id','desc')->where('user_id',$request->session()->get('user_id'))->first();
         $data['deposits'] = DB::table('ba_user_deposit')->where('user',$request->session()->get('user_id'))->orderby('id','desc')->limit(3)->get();
-        $data['transactions'] = DB::table('ba_transactions')->where('user_id',$request->session()->get('user_id'))->orderby('id','desc')->limit(6)->get();
+        
+        // Dynamic transactions and metrics from ba_transactions
+        $allUserTx = DB::table('ba_transactions')->where('user_id', $user_id)->get();
+        $inflowSum = 0;
+        $inflowCount = 0;
+        $outflowSum = 0;
+        $outflowCount = 0;
+        foreach($allUserTx as $tx) {
+            $amt = (float)($tx->amount ?? 0);
+            $type = strtolower($tx->type ?? '');
+            if($type == 'credited' || $type == 'credit') {
+                $inflowSum += $amt;
+                $inflowCount++;
+            } elseif($type == 'debited' || $type == 'debit' || $type == 'charges' || $type == 'charge') {
+                $outflowSum += $amt;
+                $outflowCount++;
+            }
+        }
+        $data['total_inflow']   = $inflowSum;
+        $data['inflow_count']   = $inflowCount;
+        $data['total_outflow']  = $outflowSum;
+        $data['outflow_count']  = $outflowCount;
+        
+        $data['transactions'] = DB::table('ba_transactions')->where('user_id', $user_id)->orderby('datetime','desc')->limit(10)->get();
+        $data['cards'] = DB::table('ba_cards')->where('user_id', $user_id)->get();
+        
         $data['pay_colle'] = DB::table('ba_payments')->where('user',$request->session()->get('id'))->orderby('id','desc')->limit(6)->get();
         $invoices = DB::table('ba_payments')->where('user',$request->session()->get('id'))->get();
         $paymentDue = 0;

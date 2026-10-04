@@ -48,11 +48,11 @@
       <!-- main wrapper row -->
       <div class="row no-gutters height-self-center">
         <!-- main wrapper col -->
-        <div class="col-sm-12 align-self-center bg-[#0f131a] border border-[#c59b27]/30 shadow-2xl rounded-2xl mb-5">
+        <div class="col-sm-12 align-self-center bg-[#004226] border border-[#aaf2c4]/30 shadow-2xl rounded-2xl mb-5">
           <!-- main row -->
           <div class="row m-0 ">
             <div class="col-12 py-3">
-              <img src="images/logo-full.png" style="max-width:150px;">
+              <img src="images/logo-full.png" style="max-width:150px; filter: brightness(0) invert(1);">
             </div>
             <!-- main col -->
             <div class="col-md-12 bg-white sign-in-page-data iq-card pb-0 mb-0">

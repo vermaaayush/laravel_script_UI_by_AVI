@@ -381,6 +381,10 @@ class Account extends Controller {
         $user_id = $request->session()->get('user_id');
         $notifaction=  new Controller();
         $notifaction->user_notifactions($user_id);
+
+        $data['transactions'] = DB::select('select * from ba_transactions where user_id = ? order by datetime desc', [$user_id]);
+        $data['accounts'] = DB::select('select * from ba_user_accounts where user_id = ?', [$user_id]);
+
         return view('spend-analysis', $data);
     }
 

@@ -8,15 +8,20 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 
 <!-- Main Content Wrapper -->
-<div class="max-w-4xl mx-auto w-full space-y-6">
+<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight">Open Additional Account</h2>
-            <p class="text-sm text-slate-500 mt-0.5">Apply for a secondary checking, savings, or investment account with instant KYC validation.</p>
+            <div class="flex items-center gap-2 text-xs font-semibold text-[#53625b] uppercase tracking-wider mb-2">
+                <a class="hover:text-[#004226] transition-colors" href="{{ url('/') }}">Custody Portal</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-[#191c1c] font-bold">New Custody Facility</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold font-headline text-[#191c1c] tracking-tight">Open Secondary Custody Account</h1>
+            <p class="text-sm text-[#53625b] mt-1">Apply for a secondary checking, savings, or investment account with instant KYC validation.</p>
         </div>
-        <a href="{{ asset('accounts-summary') }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors shadow-2xs flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[17px]">arrow_back</span>
+        <a href="{{ asset('accounts-summary') }}" class="px-4 py-2 rounded-xl bg-white border border-[#e6e9e8] text-[#53625b] text-xs font-semibold hover:bg-[#f8faf9] transition-colors shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
             <span>Accounts Overview</span>
         </a>
     </div>
@@ -24,91 +29,91 @@
     @include('flash::message')
 
     <!-- Form Card -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#edf0f4] shadow-card">
-        <form action="{{ asset('additional-accounts-save') }}" method="post" id="formAdditional" class="space-y-6">
+    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-[#e6e9e8] shadow-sm">
+        <form action="{{ asset('additional-accounts-save') }}" method="post" id="formAdditional" class="space-y-8">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
 
             <!-- Section 1: Personal Details -->
             <div>
-                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-slate-900 text-amber-400 flex items-center justify-center text-xs">1</span>
+                <h4 class="text-xs font-bold text-[#191c1c] uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-[#004226] text-white flex items-center justify-center text-xs font-bold">1</span>
                     <span>Account Holder Identity</span>
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Full Legal Name</label>
-                        <input type="text" name="fullname" required placeholder="e.g. Johnathan Doe" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Full Legal Name</label>
+                        <input type="text" name="fullname" required placeholder="e.g. Johnathan Doe" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-semibold focus:bg-white focus:border-[#004226] focus:ring-1 focus:ring-[#004226] outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">National ID / SSN (*)</label>
-                        <input type="text" name="idnumber" required placeholder="Tax ID or National Identification" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">National ID / Passport Number (*)</label>
+                        <input type="text" name="idnumber" required placeholder="Tax ID or National Identification" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-mono focus:bg-white focus:border-[#004226] focus:ring-1 focus:ring-[#004226] outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Date of Birth</label>
-                        <input type="date" name="dob" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Date of Birth</label>
+                        <input type="date" name="dob" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-mono focus:bg-white focus:border-[#004226] focus:ring-1 focus:ring-[#004226] outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Mother's Maiden Name</label>
-                        <input type="text" name="mother_maiden" required placeholder="Verification security question" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Mother's Maiden Name</label>
+                        <input type="text" name="mother_maiden" required placeholder="Verification security token" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] focus:ring-1 focus:ring-[#004226] outline-none transition-all">
                     </div>
                 </div>
             </div>
 
             <!-- Section 2: Contact Information -->
-            <div class="pt-5 border-t border-slate-100">
-                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-slate-900 text-amber-400 flex items-center justify-center text-xs">2</span>
-                    <span>Contact & Location</span>
+            <div class="pt-6 border-t border-[#f2f4f3]">
+                <h4 class="text-xs font-bold text-[#191c1c] uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-[#004226] text-white flex items-center justify-center text-xs font-bold">2</span>
+                    <span>Contact & Registered Domicile</span>
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
-                        <input type="email" name="email" id="email" required placeholder="client@example.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Email Address</label>
+                        <input type="email" name="email" id="email" required placeholder="client@example.com" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] focus:ring-1 focus:ring-[#004226] outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Phone Number</label>
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Phone Number</label>
                         <div class="flex gap-2">
-                            <select name="code" id="code" required class="w-2/5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none"></select>
-                            <input type="text" name="phone" id="phone" required placeholder="Phone number" class="w-3/5 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                            <select name="code" id="code" required class="w-2/5 bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-2.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none cursor-pointer"></select>
+                            <input type="text" name="phone" id="phone" required placeholder="Phone number" class="w-3/5 bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-mono focus:bg-white focus:border-[#004226] outline-none">
                         </div>
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Residential Street Address</label>
-                        <input type="text" name="address" required placeholder="Apartment, suite, unit, street address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 focus:ring-2 focus:ring-slate-900/5 outline-none transition-all">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Residential Street Address</label>
+                        <input type="text" name="address" required placeholder="Apartment, suite, unit, street address" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">City</label>
-                        <input type="text" name="city" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">City</label>
+                        <input type="text" name="city" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">State / Province</label>
-                        <input type="text" name="state" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">State / Province</label>
+                        <input type="text" name="state" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Country</label>
-                        <select name="country" id="country" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none"></select>
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Country / Jurisdiction</label>
+                        <select name="country" id="country" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none cursor-pointer"></select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Postal / Zip Code</label>
-                        <input type="text" name="zip" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Postal / Zip Code</label>
+                        <input type="text" name="zip" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-mono focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                 </div>
             </div>
 
             <!-- Section 3: Limits & Security Questions -->
-            <div class="pt-5 border-t border-slate-100">
-                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-slate-900 text-amber-400 flex items-center justify-center text-xs">3</span>
+            <div class="pt-6 border-t border-[#f2f4f3]">
+                <h4 class="text-xs font-bold text-[#191c1c] uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-[#004226] text-white flex items-center justify-center text-xs font-bold">3</span>
                     <span>Limits, Advisor & Security Configuration</span>
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Requested Maximum Daily Limit</label>
-                        <input type="text" name="max_amount" required placeholder="e.g. 50,000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Requested Maximum Daily Cap</label>
+                        <input type="text" name="max_amount" required placeholder="e.g. 50,000" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] font-mono font-bold focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Dedicated Account Manager</label>
-                        <select name="am" id="am" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Dedicated Account Concierge</label>
+                        <select name="am" id="am" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none cursor-pointer">
                             <option value="">Select Account Manager</option>
                             @foreach ($ams as $am)
                                 <option value="{{ $am->id }}">{{ $am->name }}</option>
@@ -116,8 +121,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Security Question 1</label>
-                        <select name="security_ques1" id="security_ques1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Security Question 1</label>
+                        <select name="security_ques1" id="security_ques1" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none cursor-pointer">
                             <option value="">Select Security Question 1</option>
                             @foreach ($security_questions as $ques)
                                 <option value="{{ $ques->question }}">{{ $ques->question }}</option>
@@ -125,12 +130,12 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Answer 1</label>
-                        <input type="text" name="answer1" id="answer1" required placeholder="Your answer" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Answer 1</label>
+                        <input type="text" name="answer1" id="answer1" required placeholder="Your answer" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Security Question 2</label>
-                        <select name="security_ques2" id="security_ques2" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Security Question 2</label>
+                        <select name="security_ques2" id="security_ques2" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none cursor-pointer">
                             <option value="">Select Security Question 2</option>
                             @foreach ($security_questions as $ques)
                                 <option value="{{ $ques->question }}">{{ $ques->question }}</option>
@@ -138,38 +143,38 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Answer 2</label>
-                        <input type="text" name="answer2" id="answer2" required placeholder="Your answer" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Answer 2</label>
+                        <input type="text" name="answer2" id="answer2" required placeholder="Your answer" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none">
                     </div>
                 </div>
             </div>
 
             <!-- Verification OTP Container -->
-            <div id="otpContainer" class="pt-5 border-t border-slate-100 hidden">
-                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200/80 mb-4">
-                    <span class="text-xs font-bold text-amber-900 block mb-1">Dual-Channel Authorization PIN</span>
-                    <p class="text-[11.5px] text-amber-700">Enter the verification codes sent to your registered phone and email address.</p>
+            <div id="otpContainer" class="pt-6 border-t border-[#f2f4f3] hidden">
+                <div class="p-4 bg-[#e8f7ee] rounded-xl border border-[#aaf2c4] mb-4">
+                    <span class="text-xs font-bold text-[#004226] block mb-1">Dual-Channel Authorization PIN</span>
+                    <p class="text-[11.5px] text-[#004226]">Enter the verification codes sent to your registered phone and email address.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Phone Verification PIN</label>
-                        <input type="text" name="phone_otp" id="phone_otp" placeholder="Enter phone PIN" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none font-mono">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Phone Verification PIN</label>
+                        <input type="text" name="phone_otp" id="phone_otp" placeholder="Enter phone PIN" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Verification PIN</label>
-                        <input type="text" name="email_otp" id="email_otp" placeholder="Enter email PIN" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:border-slate-800 outline-none font-mono">
+                        <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-1.5">Email Verification PIN</label>
+                        <input type="text" name="email_otp" id="email_otp" placeholder="Enter email PIN" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl px-3.5 py-2.5 text-xs text-[#191c1c] focus:bg-white focus:border-[#004226] outline-none font-mono">
                     </div>
                 </div>
             </div>
 
             <!-- Alerts -->
             <div id="alertFormKava" class="p-3.5 bg-rose-50 text-rose-800 rounded-xl border border-rose-200 text-xs font-semibold hidden"></div>
-            <div id="alertFormKavaSuccess" class="p-3.5 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200 text-xs font-semibold hidden"></div>
+            <div id="alertFormKavaSuccess" class="p-3.5 bg-[#e8f7ee] text-[#004226] rounded-xl border border-[#aaf2c4] text-xs font-semibold hidden"></div>
 
             <!-- Submit -->
-            <div class="pt-5 border-t border-slate-100 flex items-center justify-between">
-                <p class="text-xs text-slate-400">By continuing, you agree to our Commercial Banking Terms & Disclosures.</p>
-                <button type="submit" id="btnformAdditional" class="px-7 py-3 rounded-xl gold-gradient-btn text-xs font-bold transition-all shadow-md flex items-center gap-2">
+            <div class="pt-6 border-t border-[#f2f4f3] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-[#53625b]">By continuing, you agree to our Commercial Banking Terms & Disclosures.</p>
+                <button type="submit" id="btnformAdditional" class="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#004226] hover:bg-[#0f5b38] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">verified_user</span>
                     <span>Submit Application</span>
                 </button>

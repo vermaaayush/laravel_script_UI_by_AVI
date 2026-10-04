@@ -19,7 +19,7 @@ function logMsg($msg) {
 
 // ---------- DATABASE CONNECTION ----------
 // !!! REPLACE WITH YOUR ACTUAL DB CREDENTIALS !!!
-$conn = new mysqli('localhost', 'bank_db1', 'bank_db2', 'bank_db-35303936ff43');
+$conn = new mysqli('127.0.0.1', 'root', '', 'new_bank');
 
 if ($conn->connect_error) {
     logMsg("DB Connection failed: " . $conn->connect_error);

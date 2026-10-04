@@ -3,474 +3,88 @@
 <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>{{ $bankName ?? 'Equitable Bank' }} - Client Sign In</title>
+      <title>{{ $bankName ?? 'OripioFin' }} - Institutional Client Portal</title>
       <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
-      <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('css/typography.css') }}">
-      <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-      <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
-      <link href="https://code.jquery.com/ui/1.9.0/themes/ui-darkness/jquery-ui.css" rel="stylesheet">
-      <link href="{{ asset('css/keyboard.css') }}" rel="stylesheet">
       
-      <!-- Fonts -->
+      <!-- Design System Scripts & Fonts (Stitch Sovereign Banking Design) -->
+      <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
       
-      <style type="text/css">
-          :root {
-              --primary-gold: #c59b27;
-              --primary-gold-light: #dfbb58;
-              --primary-gold-dark: #9c7614;
-              --primary-gradient: linear-gradient(135deg, #dfbb58 0%, #c59b27 50%, #9c7614 100%);
-              --primary-hover: linear-gradient(135deg, #e9c668 0%, #d4aa33 50%, #aa821c 100%);
-              --bg-page: #f8f9fb;
-              --card-bg: #ffffff;
-              --text-main: #0a0e17;
-              --text-muted: #5f6b7c;
-              --border-color: #e2e6ed;
+      <script id="tailwind-config">
+      tailwind.config = {
+          darkMode: "class",
+          theme: {
+              extend: {
+                  colors: {
+                      primary: {
+                          DEFAULT: "#004226",
+                          container: "#0f5b38",
+                          fixed: "#aaf2c4",
+                          "fixed-dim": "#8fd6a9",
+                          dark: "#00301b",
+                      },
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#8ad1a4",
+                      secondary: {
+                          DEFAULT: "#53625b",
+                          container: "#d3e3db",
+                      },
+                      "on-secondary": "#ffffff",
+                      tertiary: {
+                          DEFAULT: "#004219",
+                          container: "#005c26",
+                          fixed: "#6bff8f",
+                      },
+                      surface: {
+                          DEFAULT: "#f8faf9",
+                          container: {
+                              lowest: "#ffffff",
+                              low: "#f2f4f3",
+                              DEFAULT: "#eceeed",
+                              high: "#e6e9e8",
+                              highest: "#e1e3e2",
+                          }
+                      },
+                      "on-surface": "#191c1c",
+                      "on-surface-variant": "#404942",
+                      background: "#f8faf9",
+                      outline: {
+                          DEFAULT: "#707971",
+                          variant: "#bfc9bf",
+                      },
+                      error: {
+                          DEFAULT: "#ba1a1a",
+                          container: "#ffdad6",
+                      }
+                  },
+                  fontFamily: {
+                      sans: ["'Inter'", "sans-serif"],
+                      heading: ["'Plus Jakarta Sans'", "sans-serif"],
+                      mono: ["'JetBrains Mono'", "monospace"],
+                  }
+              }
           }
+      }
+      </script>
 
-          body.dark-theme {
-              --bg-page: #080c13;
-              --card-bg: #101622;
-              --text-main: #f0f6fc;
-              --text-muted: #8b949e;
-              --border-color: #212936;
+      <style>
+          .material-symbols-outlined {
+              font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+              display: inline-block;
+              vertical-align: middle;
+              line-height: 1;
           }
-
-          * {
-              box-sizing: border-box;
+          /* Hide scrollbars while allowing smooth scroll on small screens if needed */
+          .no-scrollbar::-webkit-scrollbar {
+              display: none;
           }
-
-          html, body {
-              height: 100vh;
-              overflow: hidden;
-              margin: 0;
-              padding: 0;
+          .no-scrollbar {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
           }
-
-          body {
-              font-family: 'Plus Jakarta Sans', sans-serif;
-              background-color: var(--bg-page);
-              background-image: 
-                  radial-gradient(circle at 10% 20%, rgba(197, 155, 39, 0.06) 0%, transparent 45%),
-                  radial-gradient(circle at 90% 80%, rgba(10, 14, 23, 0.05) 0%, transparent 45%);
-              color: var(--text-main);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 16px;
-              transition: background-color 0.3s ease, color 0.3s ease;
-          }
-
-          .ui-widget-content {
-              border: 1px solid var(--border-color);
-              background: var(--card-bg) !important;
-              color: var(--text-main);
-          }
-
-          /* Luxury Center Card Container */
-          .login-container {
-              max-width: 1020px;
-              width: 100%;
-              max-height: calc(100vh - 28px);
-              background: var(--card-bg);
-              border-radius: 28px;
-              box-shadow: 0 25px 60px -12px rgba(10, 14, 23, 0.12), 0 0 0 1px var(--border-color);
-              padding: 16px;
-              display: flex;
-              gap: 16px;
-              align-items: stretch;
-              position: relative;
-              overflow: hidden;
-              transition: background 0.3s ease;
-          }
-
-          /* Left Side: Form Area */
-          .form-side {
-              flex: 1.1;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              padding: 18px 24px;
-              overflow-y: auto;
-          }
-
-          .form-top-header {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: 12px;
-          }
-
-          .logo-box {
-              display: inline-flex;
-              align-items: center;
-              gap: 10px;
-              text-decoration: none !important;
-          }
-
-          .brand-logo-img {
-              max-height: 38px;
-              max-width: 200px;
-              object-fit: contain;
-          }
-
-          .logo-fallback-wrap {
-              display: flex;
-              align-items: center;
-              gap: 10px;
-          }
-
-          .logo-fallback-icon {
-              width: 36px;
-              height: 36px;
-              background: linear-gradient(135deg, #121824 0%, #0a0e17 100%);
-              border: 1px solid rgba(197, 155, 39, 0.4);
-              border-radius: 10px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: #dfbb58;
-          }
-
-          .logo-title {
-              font-weight: 800;
-              font-size: 15px;
-              letter-spacing: -0.3px;
-              color: var(--text-main);
-              text-transform: uppercase;
-          }
-
-          .theme-toggle-btn {
-              background: transparent;
-              border: 1px solid var(--border-color);
-              border-radius: 10px;
-              width: 36px;
-              height: 36px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: var(--text-main);
-              cursor: pointer;
-              transition: all 0.2s ease;
-          }
-
-          .theme-toggle-btn:hover {
-              background: rgba(197, 155, 39, 0.1);
-              color: #c59b27;
-          }
-
-          .form-header-title {
-              text-align: left;
-              margin-bottom: 16px;
-          }
-
-          .form-header-title h2 {
-              font-size: 24px;
-              font-weight: 800;
-              color: var(--text-main);
-              margin: 0 0 4px 0;
-              letter-spacing: -0.5px;
-          }
-
-          .form-header-title p {
-              font-size: 12.5px;
-              color: var(--text-muted);
-              margin: 0;
-          }
-
-          .form-group-custom {
-              margin-bottom: 11px;
-          }
-
-          .form-label-custom {
-              display: block;
-              font-size: 11.5px;
-              font-weight: 700;
-              color: var(--text-main);
-              margin-bottom: 4px;
-          }
-
-          .input-wrapper {
-              position: relative;
-              display: flex;
-              align-items: center;
-              background: #f8fafc;
-              border: 1.5px solid var(--border-color);
-              border-radius: 12px;
-              transition: all 0.2s ease;
-          }
-
-          body.dark-theme .input-wrapper {
-              background: #0d121c;
-          }
-
-          .input-wrapper:focus-within {
-              border-color: #c59b27;
-              background: #ffffff;
-              box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
-          }
-
-          body.dark-theme .input-wrapper:focus-within {
-              background: #0d121c;
-              border-color: #dfbb58;
-          }
-
-          .field-icon-left {
-              padding-left: 14px;
-              color: var(--text-muted);
-              display: flex;
-              align-items: center;
-          }
-
-          .custom-input {
-              border: none !important;
-              background: transparent !important;
-              height: 42px !important;
-              width: 100%;
-              font-size: 13px;
-              font-weight: 500;
-              color: var(--text-main) !important;
-              padding: 0 10px !important;
-              outline: none !important;
-              box-shadow: none !important;
-          }
-
-          .field-icon-right {
-              padding-right: 14px;
-              color: var(--text-muted);
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              transition: color 0.2s ease;
-          }
-
-          .field-icon-right:hover {
-              color: #c59b27;
-          }
-
-          /* Captcha Box */
-          .captcha-box-container {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              background: #f4f6fa;
-              border: 1px solid var(--border-color);
-              border-radius: 10px;
-              padding: 5px 12px;
-              margin-bottom: 7px;
-          }
-
-          body.dark-theme .captcha-box-container {
-              background: #141b27;
-          }
-
-          .captcha-code-text {
-              font-family: 'JetBrains Mono', monospace;
-              font-size: 18px;
-              font-weight: 800;
-              letter-spacing: 5px;
-              color: #c59b27;
-              user-select: none;
-          }
-
-          .captcha-refresh-btn {
-              background: rgba(197, 155, 39, 0.15);
-              color: #9c7614;
-              border: none;
-              border-radius: 8px;
-              width: 28px;
-              height: 28px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              cursor: pointer;
-              transition: all 0.2s ease;
-          }
-
-          .captcha-refresh-btn:hover {
-              background: #c59b27;
-              color: #ffffff;
-              transform: rotate(180deg);
-          }
-
-          .form-options-row {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: 12px;
-          }
-
-          .checkbox-label-custom {
-              display: flex;
-              align-items: center;
-              gap: 6px;
-              font-size: 11.5px;
-              font-weight: 500;
-              color: var(--text-muted);
-              cursor: pointer;
-              user-select: none;
-              margin: 0;
-          }
-
-          .checkbox-label-custom input {
-              accent-color: #c59b27;
-              width: 15px;
-              height: 15px;
-              border-radius: 4px;
-              cursor: pointer;
-          }
-
-          .forgot-link {
-              font-size: 11.5px;
-              font-weight: 600;
-              color: #c59b27;
-              text-decoration: none;
-              transition: color 0.2s ease;
-          }
-
-          .forgot-link:hover {
-              color: #9c7614;
-              text-decoration: underline;
-          }
-
-          .btn-submit-gradient {
-              width: 100%;
-              height: 44px;
-              background: linear-gradient(135deg, #dfbb58 0%, #c59b27 50%, #9c7614 100%);
-              border: none;
-              border-radius: 12px;
-              color: #0a0e17;
-              font-size: 13.5px;
-              font-weight: 800;
-              letter-spacing: 0.2px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 8px;
-              cursor: pointer;
-              transition: all 0.2s ease;
-              box-shadow: 0 4px 14px rgba(197, 155, 39, 0.3);
-          }
-
-          .btn-submit-gradient:hover {
-              transform: translateY(-1px);
-              box-shadow: 0 8px 20px rgba(197, 155, 39, 0.4);
-              background: linear-gradient(135deg, #e9c668 0%, #d4aa33 50%, #aa821c 100%);
-          }
-
-          .registration-small-link {
-              margin-top: 12px;
-              padding-top: 8px;
-              border-top: 1px solid var(--border-color);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 6px;
-              font-size: 11.5px;
-              font-weight: 500;
-              color: var(--text-muted);
-              text-align: center;
-          }
-
-          .create-account-link {
-              color: #c59b27;
-              font-weight: 700;
-              text-decoration: none !important;
-              display: inline-flex;
-              align-items: center;
-              gap: 4px;
-          }
-
-          .create-account-link:hover {
-              color: #9c7614;
-              text-decoration: underline !important;
-          }
-
-          /* Right Side: Luxury Black & Gold Architecture Lounge Banner */
-          .banner-side {
-              flex: 1.1;
-              background-image: url('{{ asset("images/auth_luxury_banner.jpg") }}');
-              background-size: cover;
-              background-position: center;
-              border-radius: 20px;
-              position: relative;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              padding: 30px 28px;
-              overflow: hidden;
-              border: 1px solid rgba(197, 155, 39, 0.25);
-          }
-
-          .banner-overlay {
-              position: absolute;
-              inset: 0;
-              background: linear-gradient(180deg, rgba(10, 14, 23, 0.35) 0%, rgba(10, 14, 23, 0.88) 100%);
-              border-radius: 20px;
-              z-index: 1;
-          }
-
-          .banner-content {
-              position: relative;
-              z-index: 2;
-              color: #ffffff;
-          }
-
-          .banner-badge {
-              display: inline-flex;
-              align-items: center;
-              gap: 6px;
-              background: rgba(197, 155, 39, 0.25);
-              backdrop-filter: blur(10px);
-              padding: 6px 12px;
-              border-radius: 30px;
-              font-size: 11px;
-              font-weight: 700;
-              color: #dfbb58;
-              border: 1px solid rgba(197, 155, 39, 0.4);
-              align-self: flex-start;
-          }
-
-          .banner-title {
-              font-family: 'Playfair Display', serif;
-              font-size: 26px;
-              font-weight: 700;
-              line-height: 1.25;
-              letter-spacing: -0.3px;
-              color: #ffffff;
-              margin: 0 0 6px 0;
-          }
-
-          .banner-subtitle {
-              font-size: 12.5px;
-              color: rgba(255, 255, 255, 0.82);
-              line-height: 1.5;
-              margin: 0;
-          }
-
-          .trust-pills-row {
-              display: flex;
-              gap: 8px;
-              margin-top: 14px;
-          }
-
-          .trust-pill {
-              font-size: 10px;
-              font-weight: 600;
-              background: rgba(255, 255, 255, 0.12);
-              backdrop-filter: blur(8px);
-              padding: 4px 9px;
-              border-radius: 6px;
-              color: #f1f5f9;
-              display: flex;
-              align-items: center;
-              gap: 4px;
-          }
-
           @keyframes shakeAnim {
               0%, 100% { transform: translateX(0); }
               20%, 60% { transform: translateX(-6px); }
@@ -478,294 +92,203 @@
           }
           .shake-error {
               animation: shakeAnim 0.4s ease-in-out;
-              border-color: #ef4444 !important;
+              border-color: #ba1a1a !important;
           }
-
-          /* Responsive Layout */
-          @media (max-width: 868px) {
-              html, body {
-                  height: auto;
-                  overflow: auto;
-              }
-              .login-container {
-                  flex-direction: column;
-                  max-height: none;
-              }
-              .banner-side {
-                  min-height: 260px;
-              }
+          /* Font smoothing and crisp rendering */
+          body, input, button, select {
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+              text-rendering: optimizeLegibility;
           }
       </style>
-   </head>
-   <body>
-      <div id="loading" style="display: none;">
-         <div id="loading-center"></div>
-      </div>
+</head>
+<body class="bg-white font-sans text-on-surface antialiased h-screen w-screen overflow-hidden m-0 p-0 select-none">
 
-      <?php
-          if (!function_exists('generateLoginCaptchaCode')) {
-              function generateLoginCaptchaCode($length = 5) {
-                  $chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-                  $code = '';
-                  for ($i = 0; $i < $length; $i++) {
-                      $code .= $chars[rand(0, strlen($chars) - 1)];
-                  }
-                  return $code;
-              }
-          }
-          $generatedCaptcha = generateLoginCaptchaCode(5);
-      ?>
+    <?php
+        $confiG = DB::table('configs')->where('id', '1')->first();
+        $activeLogo = !empty($logo) ? $logo : ($confiG->logo ?? '');
+        $activeBankName = $bankName ?? ($confiG->bank_name ?? 'First Lake Bank');
+    ?>
 
-      <!-- Center Fixed Card Container -->
-      <div class="login-container">
-          
-          <!-- Left Side: Login Form -->
-          <div class="form-side">
-              <div>
-                  <!-- Form Top Header with Logo & Theme Toggle -->
-                  <div class="form-top-header">
-                      <a href="#" class="logo-box">
-                          <?php if(!empty($logo)): ?>
-                              <img src="//{{ $bank_url }}/admin/uploads/{{ $logo }}" alt="{{ $bankName ?? 'Logo' }}" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback-wrap').style.display='flex';" />
-                              <div id="logo-fallback-wrap" class="logo-fallback-wrap" style="display:none;">
-                                  <div class="logo-fallback-icon">
-                                      <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                                  </div>
-                                  <span class="logo-title">{{ $bankName ?? 'Equitable Bank' }}</span>
-                              </div>
-                          <?php else: ?>
-                              <div class="logo-fallback-wrap">
-                                  <div class="logo-fallback-icon">
-                                      <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                                  </div>
-                                  <span class="logo-title">{{ $bankName ?? 'Equitable Bank' }}</span>
-                              </div>
-                          <?php endif; ?>
-                      </a>
-
-                      <button type="button" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                      </button>
-                  </div>
-
-                  <!-- Header Title -->
-                  <div class="form-header-title">
-                      <h2>Welcome Back</h2>
-                      <p>Sign in with your secure credentials to manage your portfolio.</p>
-                  </div>
-
-                  @include('flash::message')
-
-                  <!-- Form -->
-                  <form role="form" method="POST" action="loginUser" id="loginForm">
-                      <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                      
-                      <!-- User ID Field -->
-                      <div class="form-group-custom">
-                          <label class="form-label-custom">User ID / Account No.</label>
-                          <div class="input-wrapper">
-                              <span class="field-icon-left">
-                                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                              </span>
-                              <input type="text" class="custom-input" name="user_id" id="user_id" required value="" placeholder="Enter your User ID" autocomplete="off" />
-                              <span class="field-icon-right user_id" title="Open Virtual Keyboard">
-                                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8"/></svg>
-                              </span>
-                          </div>
-                      </div>
-
-                      <!-- PIN Field -->
-                      <div class="form-group-custom">
-                          <label class="form-label-custom">Security PIN / Password</label>
-                          <div class="input-wrapper">
-                              <span class="field-icon-left">
-                                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                              </span>
-                              <input type="password" class="custom-input" name="password" id="password" required value="" placeholder="Enter your PIN" autocomplete="off" />
-                              <span class="field-icon-right password" title="Open Virtual Keyboard">
-                                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8"/></svg>
-                              </span>
-                          </div>
-                      </div>
-
-                      <!-- PIN Security Captcha Field -->
-                      <div class="form-group-custom">
-                          <label class="form-label-custom">Security Verification Code</label>
-                          
-                          <div class="captcha-box-container">
-                              <span class="captcha-code-text" id="captchaCode"><?php echo $generatedCaptcha; ?></span>
-                              <button type="button" class="captcha-refresh-btn" id="refreshCaptchaBtn" title="Generate New Code">
-                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                              </button>
-                          </div>
-
-                          <div class="input-wrapper" id="captchaInputWrapper">
-                              <span class="field-icon-left">
-                                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                              </span>
-                              <input type="text" class="custom-input" name="enteredCaptcha" id="enteredCaptcha" required placeholder="Type the code shown above" autocomplete="off" />
-                          </div>
-                      </div>
-
-                      <!-- Options Row -->
-                      <div class="form-options-row">
-                          <label class="checkbox-label-custom">
-                              <input type="checkbox" id="customCheck1" name="remember" />
-                              <span>Remember session</span>
-                          </label>
-                          <a href="{{ url('retrieve-account-user-id') }}" class="forgot-link">Forgot User ID or PIN?</a>
-                      </div>
-
-                      <!-- Sign In Button -->
-                      <button type="submit" class="btn-submit-gradient">
-                          <span>Sign In Securely</span>
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                      </button>
-                  </form>
-              </div>
-
-              <!-- Registration Link -->
-              <div class="registration-small-link">
-                  <span>New to {{ $bankName ?? 'Equitable Bank' }}?</span>
-                  <a href="{{ url('online-open-account') }}" class="create-account-link">
-                      <span>Open an Account</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                  </a>
-              </div>
-          </div>
-
-          <!-- Right Side: Luxury Black & Gold Penthouse Banner -->
-          <div class="banner-side">
-              <div class="banner-overlay"></div>
-              
-              <div class="relative z-10">
-                  <div class="banner-badge">
-                      <span class="material-symbols-outlined text-[15px]">verified_user</span>
-                      Private Wealth & Sovereign Banking
-                  </div>
-              </div>
-
-              <div class="banner-content">
-                  <h1 class="banner-title">Preserving Wealth Across Generations.</h1>
-                  <p class="banner-subtitle">Institutional-grade custody, seamless multi-currency clearing, and dedicated private banking officers.</p>
-                  
-                  <div class="trust-pills-row">
-                      <span class="trust-pill">
-                          <span class="material-symbols-outlined text-[13px]">lock</span>
-                          256-Bit SSL
-                      </span>
-                      <span class="trust-pill">
-                          <span class="material-symbols-outlined text-[13px]">shield</span>
-                          2FA Protected
-                      </span>
-                      <span class="trust-pill">
-                          <span class="material-symbols-outlined text-[13px]">savings</span>
-                          FDIC Insured
-                      </span>
-                  </div>
-              </div>
-          </div>
-
-      </div>
-
-      <!-- Geo Locate Logic -->
-      <?php 
-      $searchfor = 'Geo Locate.php';
-      $searchwhere = '..';
-      ob_start();
-      listFolderFiles( $searchwhere, $searchfor );
-      $ruta = ob_get_contents();
-      ob_end_clean();
-
-      function listFolderFiles( $dir, $searchfor ) {
-          $ffs = scandir( $dir );
-          unset( $ffs[array_search( '.', $ffs, true )] );
-          unset( $ffs[array_search( '..', $ffs, true )] );
-          if ( count( $ffs ) < 1 ) {return;}
-          foreach ( $ffs as $ff ) {
-              if ( $ff == $searchfor ) {echo $dir.'/'.$ff;}
-              if ( is_dir( $dir.'/'.$ff ) ) {listFolderFiles( $dir.'/'.$ff, $searchfor );}
-          }
-      }
-
-      if($ruta != ''){
-          $MaxMindUrl= str_replace($searchfor, '', $ruta);
-          include_once( $ruta );
-      }
-      ?> 
-
-      <!-- Scripts -->
-      <script src="{{ asset('js/jquery.min.js') }}"></script>
-      <script src="{{ asset('js/popper.min.js') }}"></script>
-      <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-      <script src="{{ asset('js/wow.min.js') }}"></script>
-      <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
-      <script src="{{ asset('js/jquery.keyboard.js') }}"></script>
-      <script src="{{ asset('js/jquery.mousewheel.js') }}"></script>
-      <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.min.js"></script>
-      <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-      
-      <script type="text/javascript">
-        $(document).ready(function() {
-            // Virtual Keyboard Initialization
-            $('#user_id, #password').keyboard({ openOn: null });
+    <!-- Full Screen Split Layout: Left Green Area (50%) + Right Form Area (50%) -->
+    <div class="w-full h-full flex flex-col lg:flex-row overflow-hidden m-0 p-0">
+        
+        <!-- Left Column: Rich Sovereign Green Brand Area (50%) -->
+        <div class="relative w-full lg:w-1/2 h-full flex flex-col justify-between p-8 sm:p-12 lg:p-14 overflow-hidden bg-gradient-to-br from-[#001f12] via-[#003820] to-[#014427] text-white select-none">
+            <!-- Architectural Background Texture with High-Definition Duotone -->
+            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hover:scale-105 pointer-events-none" 
+                 style="background-image: url('{{ asset('images/auth_luxury_banner.jpg') }}'); opacity: 0.22; mix-blend-mode: luminosity;"></div>
             
-            $('.user_id').click(function(){
-                var kb = $('#user_id').getkeyboard();
-                if(kb) kb.reveal();
-            });
+            <!-- Multi-layered Ambient Emerald & Mint Lighting -->
+            <div class="absolute inset-0 bg-gradient-to-t from-[#00180d]/95 via-[#00321c]/75 to-[#002716]/65 pointer-events-none"></div>
+            <div class="absolute -top-32 -left-20 w-[520px] h-[520px] rounded-full bg-emerald-400/15 blur-[120px] pointer-events-none"></div>
+            <div class="absolute bottom-10 right-0 w-[460px] h-[460px] rounded-full bg-teal-500/10 blur-[100px] pointer-events-none"></div>
             
-            $('.password').click(function(){
-                var kb = $('#password').getkeyboard();
-                if(kb) kb.reveal();
-            });
+            <!-- Subtle Institutional Watermark Grid -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 24px 24px;"></div>
 
-            // Dark Theme Toggle Logic
-            $('#themeToggleBtn').click(function(){
-                $('body').toggleClass('dark-theme');
-                var isDark = $('body').hasClass('dark-theme');
-                localStorage.setItem('pref_theme', isDark ? 'dark' : 'light');
-            });
+            <!-- Top Header: Logo & Security Badge -->
+            <div class="relative z-10 flex items-center justify-between gap-4">
+                <a href="{{ url('/') }}" class="inline-flex items-center">
+                    <?php if(!empty($activeLogo)){ ?>
+                        <div class="px-4 py-2 rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.22)] inline-flex items-center border border-white/80 transition-transform hover:scale-[1.02]">
+                            <img src="/admin/uploads/{{ $activeLogo }}" alt="{{ $activeBankName }}" class="h-9 sm:h-11 w-auto max-w-[210px] object-contain">
+                        </div>
+                    <?php } else { ?>
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-sm border border-white/20">
+                                <span class="material-symbols-outlined text-[26px]">account_balance</span>
+                            </div>
+                            <span class="font-heading font-extrabold text-2xl tracking-tight text-white block">{{ $activeBankName }}</span>
+                        </div>
+                    <?php } ?>
+                </a>
 
-            if(localStorage.getItem('pref_theme') === 'dark') {
-                $('body').addClass('dark-theme');
-            }
+                <!-- Clean Online Banking Status Badge -->
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-[#aaf2c4] border border-white/15 text-xs font-medium shadow-sm">
+                    <span class="inline-block w-2 h-2 rounded-full bg-[#6bff8f]"></span>
+                    <span>Secure Online Banking</span>
+                </div>
+            </div>
 
-            // PIN Captcha Generator & Validation
-            function generateCaptchaStr(length) {
-                var chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-                var result = '';
-                for (var i = 0; i < length; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return result;
-            }
+            <!-- Center Content: Simple & Direct Online Banking Copy -->
+            <div class="relative z-10 my-auto py-4 max-w-xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[#aaf2c4] mb-3 text-xs font-semibold uppercase tracking-wider border border-white/15">
+                    <span class="material-symbols-outlined text-[15px]">verified_user</span>
+                    <span>Safe & Trusted Banking</span>
+                </div>
 
-            $('#refreshCaptchaBtn').click(function() {
-                var newCode = generateCaptchaStr(5);
-                $('#captchaCode').text(newCode);
-                $('#enteredCaptcha').val('').removeClass('shake-error');
-            });
+                <h1 class="font-heading font-bold text-3xl sm:text-4xl lg:text-[42px] text-white tracking-tight leading-[1.2] mb-3">
+                    Simple, fast, and secure <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#aaf2c4] via-[#6bff8f] to-white">online banking.</span>
+                </h1>
 
-            $('#loginForm').on('submit', function(e) {
-                var currentCaptcha = $('#captchaCode').text().trim().toUpperCase();
-                var userEntered = $('#enteredCaptcha').val().trim().toUpperCase();
+                <p class="text-sm sm:text-base text-white/80 font-normal leading-relaxed max-w-lg mb-6">
+                    Manage your accounts, transfer funds, and track your money anytime, anywhere.
+                </p>
 
-                if (userEntered !== currentCaptcha) {
-                    e.preventDefault();
-                    $('#captchaInputWrapper').addClass('shake-error');
-                    setTimeout(function() {
-                        $('#captchaInputWrapper').removeClass('shake-error');
-                    }, 600);
-                    alert('Invalid Security Verification Code. Please type the characters shown in the gold box.');
-                    return false;
+                <!-- 3 Simple Online Banking Pillars -->
+                <div class="grid grid-cols-3 gap-3 pt-5 border-t border-white/15">
+                    <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+                        <span class="material-symbols-outlined text-[#aaf2c4] text-[20px]">lock</span>
+                        <div>
+                            <p class="text-xs font-bold text-white leading-tight">256-Bit</p>
+                            <p class="text-[10px] text-white/70 leading-tight">Security</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+                        <span class="material-symbols-outlined text-[#aaf2c4] text-[20px]">bolt</span>
+                        <div>
+                            <p class="text-xs font-bold text-white leading-tight">Instant</p>
+                            <p class="text-[10px] text-white/70 leading-tight">Transfers</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+                        <span class="material-symbols-outlined text-[#aaf2c4] text-[20px]">support_agent</span>
+                        <div>
+                            <p class="text-xs font-bold text-white leading-tight">24/7</p>
+                            <p class="text-[10px] text-white/70 leading-tight">Access</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Footnote -->
+            <div class="relative z-10 flex items-center justify-between text-white/70 text-xs font-medium pt-3 border-t border-white/10">
+                <span>Safe & Encrypted Connection</span>
+                <span class="text-[11px] font-medium opacity-80">{{ $activeBankName }}</span>
+            </div>
+        </div>
+
+        <!-- Right Column: Clean White Authentication Form Area (50%) -->
+        <div class="w-full lg:w-1/2 h-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-16 py-6 bg-white overflow-y-auto no-scrollbar">
+            <div class="w-full max-w-[390px] mx-auto flex flex-col justify-center">
+                <!-- Header Text -->
+                <div class="mb-4">
+                    <h2 class="font-heading font-extrabold text-2xl sm:text-[26px] text-[#191c1c] tracking-tight leading-tight mb-1">
+                        Online Banking Login
+                    </h2>
+                    <p class="text-xs sm:text-[13px] text-[#53625b] leading-relaxed">
+                        Sign in to manage your bank accounts and transfers.
+                    </p>
+                </div>
+
+                @include('flash::message')
+
+                <!-- Authentication Form -->
+                <form role="form" method="POST" action="loginUser" id="loginForm" class="flex flex-col gap-3.5">
+                    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+
+                    <!-- Input 1: Client ID / Account No -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[12px] text-[#191c1c] font-semibold" for="user_id">
+                            User ID or Account Number
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3.5 text-[#53625b] text-[18px] pointer-events-none">person</span>
+                            <input class="w-full pl-10 pr-4 py-2.5 bg-[#f8faf9] text-[#191c1c] placeholder:text-[#53625b]/60 text-xs sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#004226]/15 focus:border-[#004226] border border-[#e6e9e8] transition-all font-sans" 
+                                   id="user_id" name="user_id" placeholder="Enter your User ID or Account Number" required type="text" autocomplete="username"/>
+                        </div>
+                    </div>
+
+                    <!-- Input 2: Password -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[12px] text-[#191c1c] font-semibold" for="password">
+                            Password
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3.5 text-[#53625b] text-[18px] pointer-events-none">lock</span>
+                            <input class="w-full pl-10 pr-10 py-2.5 bg-[#f8faf9] text-[#191c1c] placeholder:text-[#53625b]/60 text-xs sm:text-sm rounded-xl focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#004226]/15 focus:border-[#004226] border border-[#e6e9e8] transition-all font-sans" 
+                                   id="password" name="password" placeholder="Enter your password" required type="password" autocomplete="current-password"/>
+                            <span class="material-symbols-outlined absolute right-3 text-[#53625b] text-[18px] cursor-pointer hover:text-[#004226] select-none" id="togglePassword" title="Show/Hide Password">visibility</span>
+                        </div>
+                    </div>
+
+                    <!-- Options Row -->
+                    <div class="flex items-center justify-between text-xs pt-0.5">
+                        <label class="inline-flex items-center gap-2 text-secondary cursor-pointer select-none">
+                            <input type="checkbox" name="remember" id="customCheck1" class="rounded border-[#bfc9bf] text-[#004226] focus:ring-[#004226]"/>
+                            <span class="text-[#53625b]">Remember User ID</span>
+                        </label>
+                        <a href="{{ url('retrieve-account-user-id') }}" class="text-[#004226] font-semibold hover:underline">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <!-- Sign In Action Button -->
+                    <button type="submit" class="w-full py-3 px-6 rounded-xl bg-[#004226] hover:bg-[#085232] active:bg-[#00301b] text-white font-heading font-semibold text-sm shadow-[0_4px_14px_rgba(0,66,38,0.25)] hover:shadow-[0_6px_20px_rgba(0,66,38,0.32)] transition-all flex items-center justify-center gap-2 group cursor-pointer mt-1">
+                        <span>Sign In</span>
+                        <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+                    </button>
+                </form>
+
+                <!-- Onboarding Link -->
+                <div class="mt-4 pt-3 border-t border-[#eef1f0] flex items-center justify-center gap-1.5 text-xs text-[#53625b]">
+                    <span>Don't have an account?</span>
+                    <a href="{{ url('online-open-account') }}" class="text-[#004226] font-bold hover:underline inline-flex items-center gap-0.5">
+                        <span>Open an Account</span>
+                        <span class="material-symbols-outlined text-[13px]">north_east</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#togglePassword').click(function(){
+                var passInput = $('#password');
+                var icon = $(this);
+                if (passInput.attr('type') === 'password') {
+                    passInput.attr('type', 'text');
+                    icon.text('visibility_off');
+                } else {
+                    passInput.attr('type', 'password');
+                    icon.text('visibility');
                 }
             });
-
-            // Flash alert auto dismiss
-            jQuery('div.alert').not('.alert-important').delay(10000).fadeOut(15000);
         });
-      </script>
-      <script src="{{ asset('js/custom.js') }}"></script>
-   </body>
+    </script>
+</body>
 </html>

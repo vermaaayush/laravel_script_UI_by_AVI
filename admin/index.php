@@ -1,8 +1,21 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
+// PHP 8.1+ compatibility: strip 'full_path' from $_FILES which breaks Symfony 4/5 FileBag
+if (!empty($_FILES)) {
+    $stripFullPath = function(&$files) use (&$stripFullPath) {
+        foreach ($files as &$file) {
+            if (is_array($file)) {
+                unset($file['full_path']);
+                $stripFullPath($file);
+            }
+        }
+    };
+    $stripFullPath($_FILES);
+}
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

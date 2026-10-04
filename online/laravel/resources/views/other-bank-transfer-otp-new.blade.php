@@ -1,31 +1,26 @@
 <!-- Header -->
 @include('header')
-<!-- // Header -->
-
 <!-- Sidebar -->
 @include('sidebar')
-<!-- //  Sidebar -->
-
 <!-- top navbar -->
 @include('topNav')
-<!-- // top navbar -->
 
 <?php 
     $confiG = DB::table('configs')->where('id','1')->first();
     $popupsN = DB::table('ba_pop_pages')->orderby('id','asc')->get();
 ?>   
 
-<!-- Page Content  -->
-<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+<!-- Page Content (Stitch Sovereign Theme) -->
+<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 font-sans">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
-        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">
-            <a class="hover:text-[#c59b27] transition-colors" href="#">Transfers</a>
+        <div class="flex items-center gap-2 text-secondary text-xs font-semibold uppercase tracking-wider mb-2">
+            <a class="hover:text-primary transition-colors" href="{{ url('transfer-to-other-bank') }}">Transfers</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-slate-800">Wire Security Clearance</span>
+            <span class="text-on-surface">Wire Security Clearance</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">External Wire Verification</h1>
-        <p class="text-sm text-slate-500 mt-1">Real-time interbank clearance validation and cryptographic multi-factor authorization.</p>
+        <h1 class="text-2xl sm:text-3xl font-heading font-bold text-on-surface tracking-tight">External Wire Verification</h1>
+        <p class="text-sm text-secondary mt-1">Real-time interbank clearance validation and cryptographic multi-factor authorization.</p>
     </div>
 
     @if($step==4)    
@@ -69,35 +64,35 @@
 
     <!-- Section A: Processing Animation -->
     <div id="sectionA" class="py-12">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-8 sm:p-12 text-center max-w-lg mx-auto">
+        <div class="bg-surface-container-lowest rounded-3xl shadow-xl border border-outline-variant/30 p-8 sm:p-12 text-center max-w-lg mx-auto">
             <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
-                <div class="absolute inset-0 rounded-full border-4 border-[#c59b27] border-t-transparent animate-spin"></div>
-                <span class="material-symbols-outlined text-[#c59b27] text-3xl">currency_exchange</span>
+                <div class="absolute inset-0 rounded-full border-4 border-surface-container"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+                <span class="material-symbols-outlined text-primary text-3xl">currency_exchange</span>
             </div>
 
-            <h3 class="text-lg font-bold text-slate-900 mb-2">Interbank Settlement in Progress</h3>
-            <p id="animate_text" class="text-xs font-mono font-bold text-[#c59b27] tracking-wider uppercase min-h-[20px]"></p>
+            <h3 class="text-lg font-heading font-bold text-on-surface mb-2">Interbank Settlement in Progress</h3>
+            <p id="animate_text" class="text-xs font-mono font-bold text-primary tracking-wider uppercase min-h-[20px]"></p>
             
-            <div class="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 text-left">
-                <div class="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <span class="material-symbols-outlined text-[16px] text-emerald-500">lock</span>
-                    <span class="font-semibold text-slate-700">Encrypted Communication Pipeline</span>
+            <div class="mt-6 p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 text-left">
+                <div class="flex items-center gap-2 text-secondary text-xs mb-1">
+                    <span class="material-symbols-outlined text-[16px] text-primary">lock</span>
+                    <span class="font-semibold text-on-surface">Encrypted Communication Pipeline</span>
                 </div>
-                <p class="text-[11px] text-slate-400">Do not refresh or leave this window while your transaction data is synchronizing with central settlement.</p>
+                <p class="text-[11px] text-secondary">Do not refresh or leave this window while your transaction data is synchronizing with central settlement.</p>
             </div>
         </div>
     </div>
 
     <!-- Section B: OTP Verification Form -->
     <div id="sectionB" style="display:none">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-surface-container-lowest rounded-3xl shadow-xl border border-outline-variant/30 overflow-hidden">
+            <div class="p-6 border-b border-surface-container flex items-center justify-between bg-surface-container-low/50">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-900">Security Authorization Required</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">External wire dispatch for transaction #{{ $tran_id }}</p>
+                    <h2 class="text-lg font-heading font-bold text-on-surface">Security Authorization Required</h2>
+                    <p class="text-xs text-secondary mt-0.5">External wire dispatch for transaction #{{ $tran_id }}</p>
                 </div>
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#c59b27]/15 text-[#9c7614]">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
                     Step {{ $step - 3 }} of 3
                 </span>
             </div>
@@ -112,45 +107,45 @@
                         <div class="max-w-md mx-auto text-center">
                             @if($step==4 && isset($token[0]) && $token[0]['allow_code_1']==1)
                                 <div class="mb-4">
-                                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto mb-3">
+                                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
                                         <span class="material-symbols-outlined text-2xl">key</span>
                                     </div>
-                                    <h3 class="text-base font-bold text-slate-900 mb-1">Enter {{ $token[0]['code_name_1'] }}</h3>
-                                    <p class="text-xs text-slate-500">Please provide your authorized {{ $token[0]['code_name_1'] }} token to continue.</p>
+                                    <h3 class="text-base font-heading font-bold text-on-surface mb-1">Enter {{ $token[0]['code_name_1'] }}</h3>
+                                    <p class="text-xs text-secondary">Please provide your authorized {{ $token[0]['code_name_1'] }} token to continue.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-outline-variant/30 bg-surface-container-low font-mono text-center text-lg font-bold tracking-widest text-on-surface focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @elseif($step==5 && isset($token[0]) && $token[0]['allow_code_2']==1)
                                 <div class="mb-4">
-                                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto mb-3">
+                                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
                                         <span class="material-symbols-outlined text-2xl">security</span>
                                     </div>
-                                    <h3 class="text-base font-bold text-slate-900 mb-1">Enter {{ $token[0]['code_name_2'] }}</h3>
-                                    <p class="text-xs text-slate-500">Please provide your designated {{ $token[0]['code_name_2'] }} token to validate dispatch.</p>
+                                    <h3 class="text-base font-heading font-bold text-on-surface mb-1">Enter {{ $token[0]['code_name_2'] }}</h3>
+                                    <p class="text-xs text-secondary">Please provide your designated {{ $token[0]['code_name_2'] }} token to validate dispatch.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-outline-variant/30 bg-surface-container-low font-mono text-center text-lg font-bold tracking-widest text-on-surface focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @elseif($step==6 && isset($token[0]) && $token[0]['allow_code_3']==1)
                                 <div class="mb-4">
-                                    <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto mb-3">
+                                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
                                         <span class="material-symbols-outlined text-2xl">verified_user</span>
                                     </div>
-                                    <h3 class="text-base font-bold text-slate-900 mb-1">Enter {{ $token[0]['code_name_3'] }}</h3>
-                                    <p class="text-xs text-slate-500">Final clearance authorization token required for funds dispatch.</p>
+                                    <h3 class="text-base font-heading font-bold text-on-surface mb-1">Enter {{ $token[0]['code_name_3'] }}</h3>
+                                    <p class="text-xs text-secondary">Final clearance authorization token required for funds dispatch.</p>
                                 </div>
                                 <div class="mb-6">
-                                    <input type="text" class="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-[#c59b27] focus:ring-2 focus:ring-[#c59b27]/10 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
+                                    <input type="text" class="w-full h-12 rounded-xl border border-outline-variant/30 bg-surface-container-low font-mono text-center text-lg font-bold tracking-widest text-on-surface focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" name="otp" id="otp" required placeholder="••••••••" autocomplete="off" />
                                 </div>
                             @endif    
 
-                            <button type="submit" name="next" class="w-full py-3.5 px-6 rounded-xl bg-[#c59b27] hover:bg-[#b0871d] text-black text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2" value="Next">
+                            <button type="submit" name="next" class="w-full py-3.5 px-6 rounded-xl bg-primary hover:bg-primary-container text-on-primary text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2" value="Next">
                                 <span>Verify & Continue Settlement</span>
                                 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                             </button>
 
-                            <p class="text-[11px] text-slate-400 mt-4 leading-relaxed">
+                            <p class="text-[11px] text-secondary mt-4 leading-relaxed">
                                 Entering an incorrect security code more than 3 times will trigger protective account lock. If you need assistance obtaining your code, contact your private account officer.
                             </p>
                         </div>
@@ -160,7 +155,6 @@
         </div>
     </div>
 </div>
-<!-- // Page Content -->
 
 <script>
     const animate_text = document.getElementById('animate_text');
@@ -196,6 +190,4 @@
     }, 1500);
 </script>
 
-<!-- footer -->
 @include('footer')
-<!-- // footer -->

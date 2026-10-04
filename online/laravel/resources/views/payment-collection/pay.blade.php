@@ -11,29 +11,29 @@
 <!-- // top navbar -->
 
 <!-- Main Content Wrapper -->
-<div class="max-w-4xl mx-auto w-full pb-16">
+<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
-        <div class="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">
-            <a class="hover:text-primary transition-colors flex items-center gap-1" href="{{ url('/online') }}">
-                <span class="material-symbols-outlined text-[16px]">home</span> Dashboard
+        <div class="flex items-center gap-2 text-xs font-semibold text-[#53625b] uppercase tracking-wider mb-2">
+            <a class="hover:text-[#004226] transition-colors flex items-center gap-1" href="{{ url('/') }}">
+                <span class="material-symbols-outlined text-[14px]">home</span> Custody Portal
             </a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-slate-400">Payment & Collection</span>
+            <span class="text-[#53625b]">Receivables & Invoicing</span>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-primary font-bold">Pay Invoice</span>
+            <span class="text-[#191c1c] font-bold">Invoice Settlement</span>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Invoice Settlement</h1>
-                <p class="text-sm text-slate-500 mt-1">Select an outstanding invoice and remit payment via bank wire or bitcoin.</p>
+                <h1 class="text-2xl sm:text-3xl font-bold font-headline text-[#191c1c] tracking-tight">Invoice Remittance</h1>
+                <p class="text-sm text-[#53625b] mt-1">Select an outstanding invoice and remit payment via bank wire or bitcoin.</p>
             </div>
             <div class="flex items-center gap-2">
-                <a href="{{ url('invoice-pending') }}" class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors">
-                    Pending
+                <a href="{{ url('invoice-pending') }}" class="px-4 py-2 rounded-xl border border-[#e6e9e8] bg-white hover:bg-[#f8faf9] text-[#53625b] text-xs font-bold transition-all">
+                    Pending Invoices
                 </a>
-                <a href="{{ url('invoice-full') }}" class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors">
-                    Paid
+                <a href="{{ url('invoice-full') }}" class="px-4 py-2 rounded-xl border border-[#e6e9e8] bg-white hover:bg-[#f8faf9] text-[#53625b] text-xs font-bold transition-all">
+                    Cleared Ledger
                 </a>
             </div>
         </div>
@@ -42,103 +42,105 @@
     @include('flash::message')
 
     <!-- Form Container -->
-    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+    <div class="bg-white rounded-2xl border border-[#e6e9e8] shadow-sm p-6 sm:p-8">
         <form method="POST" action="pay-invoice" enctype="multipart/form-data" class="space-y-6"> 
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <!-- Invoice Select -->
                 <div class="md:col-span-2">
-                    <label for="invoiceDropDown" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Select Outstanding Invoice <span class="text-rose-500">*</span></label>
+                    <label for="invoiceDropDown" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Select Outstanding Statement <span class="text-rose-500">*</span></label>
                     <div class="relative">
-                        <select name="invoice" id="invoiceDropDown" required class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 font-semibold focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer">
+                        <select name="invoice" id="invoiceDropDown" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl px-4 py-3 text-sm text-[#191c1c] font-semibold outline-none transition-all appearance-none cursor-pointer">
                             <option value="">-- Choose an Invoice to Settle --</option>
                             @foreach($list as $single)
                                 <option value="{{ $single->id }}" data-id="<?= $single->id ?>" data-amount="<?= number_format($single->price,2) ?>" data-paid="<?= number_format($single->paid,2) ?>" data-option="<?= $single->pay_option ?>">{{ $single->name }} (Total: <?= number_format($single->price,2) ?>)</option>
                             @endforeach
                         </select>
-                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#53625b]">expand_more</span>
                     </div>
                 </div>
                 
                 <!-- Invoice Amount -->
                 <div>
-                    <label for="amountToPay" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Invoice Amount</label>
-                    <input type="text" name="amountToPay" id="amountToPay" readonly placeholder="0.00" class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-slate-900 cursor-not-allowed outline-none">
+                    <label for="amountToPay" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Invoice Amount</label>
+                    <input type="text" name="amountToPay" id="amountToPay" readonly placeholder="0.00" class="w-full bg-[#f2f4f3] border border-[#e6e9e8] rounded-xl px-4 py-3 text-sm font-mono font-bold text-[#191c1c] cursor-not-allowed outline-none">
                 </div>
                 
                 <!-- Paid Amount -->
                 <div>
-                    <label for="paidAmount" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Already Remitted</label>
-                    <input type="text" name="paidAmt" id="paidAmount" readonly placeholder="0.00" class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-emerald-700 cursor-not-allowed outline-none">
+                    <label for="paidAmount" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Already Remitted</label>
+                    <input type="text" name="paidAmt" id="paidAmount" readonly placeholder="0.00" class="w-full bg-[#f2f4f3] border border-[#e6e9e8] rounded-xl px-4 py-3 text-sm font-mono font-bold text-[#004226] cursor-not-allowed outline-none">
                 </div>
                 
                 <!-- Payment Method -->
                 <div class="md:col-span-2">
                     <div class="flex items-center justify-between mb-2">
-                        <label for="paymentMethod" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Settlement Channel <span class="text-rose-500">*</span></label>
-                        <a href="javascript:void(0)" id="infoBtn" style="display:none;" class="text-primary hover:text-primary-hover text-xs font-bold inline-flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px]">info</span> View Instructions
+                        <label for="paymentMethod" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider">Settlement Channel <span class="text-rose-500">*</span></label>
+                        <a href="javascript:void(0)" id="infoBtn" style="display:none;" class="text-[#004226] hover:text-[#0f5b38] text-xs font-bold inline-flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px]">info</span>
+                            <span>View Remittance Instructions</span>
                         </a>
                     </div>
                     <div class="relative">
-                        <select name="paymentMethod" id="paymentMethod" required class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 font-semibold focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer">
+                        <select name="paymentMethod" id="paymentMethod" required class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl px-4 py-3 text-sm text-[#191c1c] font-semibold outline-none transition-all appearance-none cursor-pointer">
                             <option value="">-- Select an invoice first --</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#53625b]">expand_more</span>
                     </div>
                 </div>
                 
                 <!-- Payment Amount -->
                 <div>
-                    <label for="paymentAmount" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Remittance Amount <span class="text-rose-500">*</span></label>
+                    <label for="paymentAmount" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Remittance Amount <span class="text-rose-500">*</span></label>
                     <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-mono font-bold">$</span>
-                        <input type="number" step="any" name="paymentAmount" id="paymentAmount" required placeholder="0.00" class="w-full bg-slate-50/60 border border-slate-200 rounded-xl py-3 pl-9 pr-4 text-sm font-mono font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all decimal-num">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#53625b] font-mono font-bold">{{ Session::get('account_currency') ?? '$' }}</span>
+                        <input type="number" step="any" name="paymentAmount" id="paymentAmount" required placeholder="0.00" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl py-3 pl-10 pr-4 text-sm font-mono font-bold text-[#191c1c] outline-none transition-all decimal-num">
                     </div>
                 </div>
                 
                 <!-- BTC to Send -->
                 <div id="btcAmountContainer" style="display:none;">
-                    <label for="btcToSend" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Exact BTC To Transfer</label>
+                    <label for="btcToSend" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Calculated Crypto (BTC)</label>
                     <input type="text" name="btcToSend" id="btcToSend" readonly placeholder="0.000000 BTC" class="w-full bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-amber-800 cursor-not-allowed outline-none">
                 </div>
             </div>
 
             <!-- Bank Details (Hidden initially) -->
-            <div id="remarksCashCont" style="display:none;" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+            <div id="remarksCashCont" style="display:none;" class="p-5 rounded-xl bg-[#f8faf9] border border-[#e6e9e8] space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="bank_account" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Originating Bank Account Name</label>
-                        <input type="text" name="bank_account" id="bank_account" placeholder="Name on bank account" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        <label for="bank_account" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Originating Bank Account Name</label>
+                        <input type="text" name="bank_account" id="bank_account" placeholder="Name on bank account" class="w-full bg-white border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl px-4 py-3 text-sm text-[#191c1c] font-semibold outline-none transition-all">
                     </div>
                     <div>
-                        <label for="depo_referance" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Deposit / Wire Reference</label>
-                        <input type="text" name="depo_referance" id="depo_referance" placeholder="Receipt or bank reference number" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 font-mono font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        <label for="depo_referance" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Deposit / Wire Reference</label>
+                        <input type="text" name="depo_referance" id="depo_referance" placeholder="Receipt or bank reference number" class="w-full bg-white border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl px-4 py-3 text-sm text-[#191c1c] font-mono outline-none transition-all">
                     </div>
                 </div>
             </div>
 
             <!-- BTC Hash -->
             <div id="bitHash" style="display:none;">
-                <label for="remarks_bitcoin" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Blockchain Transaction Hash (Optional)</label>
-                <textarea name="remarks_bitcoin" id="remarks_bitcoin" rows="2" placeholder="e.g. 7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069" class="w-full bg-slate-50/60 border border-slate-200 rounded-xl p-3 text-xs font-mono text-slate-800 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-y"></textarea>
+                <label for="remarks_bitcoin" class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Blockchain Transaction Hash (Optional)</label>
+                <textarea name="remarks_bitcoin" id="remarks_bitcoin" rows="2" placeholder="e.g. 7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069" class="w-full bg-[#f8faf9] border border-[#e6e9e8] focus:border-[#004226] focus:ring-1 focus:ring-[#004226] rounded-xl p-3 text-xs font-mono text-[#191c1c] outline-none transition-all resize-y"></textarea>
             </div>
             
             <!-- Upload Proof -->
             <div class="pt-2">
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Attach Payment Confirmation / Wire Advice</label>
-                <input type="file" name="fBitcoin" class="w-full bg-slate-50/60 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                <label class="block text-xs font-bold text-[#53625b] uppercase tracking-wider mb-2">Attach Payment Confirmation / Wire Advice</label>
+                <input type="file" name="fBitcoin" class="w-full bg-[#f8faf9] border border-[#e6e9e8] rounded-xl p-2.5 text-xs text-[#53625b] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#004226] file:text-white hover:file:bg-[#0f5b38] file:cursor-pointer cursor-pointer">
             </div>
 
             <!-- Actions -->
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <div class="pt-4 border-t border-[#f2f4f3] flex items-center justify-end gap-3">
                 <input type="hidden" name="payid" id="payId" />
                 <input type="hidden" name="comission" id="commissionAmt" />
                 <input type="hidden" name="btcrate" value="<?= $dollerRate ?>" />
                 <input type="hidden" name="type" value="new" />
-                <button type="submit" class="px-8 py-3.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[18px]">payments</span> Authorize Invoice Payment
+                <button type="submit" class="px-8 py-3.5 bg-[#004226] hover:bg-[#0f5b38] text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">payments</span>
+                    <span>Authorize Invoice Settlement</span>
                 </button>
             </div>
         </form>
@@ -152,31 +154,32 @@
 <?php $payMethodBit = DB::table('ba_payment_methods')->where('id','2')->first(); ?>
 <div class="modal fade" id="paymentInfo" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content rounded-3xl border-0 shadow-2xl overflow-hidden">
-            <div class="modal-header px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Remittance Instructions</h5>
+        <div class="modal-content rounded-2xl border-0 shadow-2xl overflow-hidden bg-white">
+            <div class="modal-header px-6 py-4 bg-[#f8faf9] border-b border-[#f2f4f3] flex items-center justify-between">
+                <h5 class="text-xs font-bold text-[#191c1c] uppercase tracking-wider">Settlement Remittance Instructions</h5>
                 <div class="flex items-center gap-2">
-                    <button type="button" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors inline-flex items-center gap-1" onclick="CreatePDFfromHTML();" id="downloadBtn">
-                        <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> Download PDF
+                    <button type="button" class="px-3 py-1.5 rounded-lg border border-[#e6e9e8] bg-white hover:bg-[#f8faf9] text-[#53625b] text-xs font-bold transition-colors inline-flex items-center gap-1" onclick="CreatePDFfromHTML();" id="downloadBtn">
+                        <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+                        <span>Download PDF</span>
                     </button>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="text-[#53625b] hover:text-[#191c1c]" data-dismiss="modal" aria-label="Close">
                         <span class="material-symbols-outlined text-[20px]">close</span>
                     </button>
                 </div>
             </div>
-            <div class="modal-body p-6 text-sm text-slate-700 leading-relaxed downloadableContent">
+            <div class="modal-body p-6 text-sm text-[#191c1c] leading-relaxed downloadableContent">
                 <div class="col-md-12" id="bitcoin">
-                    <p class="text-center font-mono font-bold text-primary mb-4">Bitcoin Wallet: <?= json_decode($coderanita)->bitwallet ?? '' ?></p>
-                    <div class="text-xs text-slate-600 leading-relaxed">
+                    <p class="text-center font-mono font-bold text-[#004226] mb-4">Bitcoin Wallet: <?= json_decode($coderanita)->bitwallet ?? '' ?></p>
+                    <div class="text-xs text-[#53625b] leading-relaxed">
                         <?= $payMethodBit ? nl2br($payMethodBit->description) : '' ?>
                     </div>
                 </div>
-                <div class="col-md-12 text-xs text-slate-600 leading-relaxed" id="bank">
+                <div class="col-md-12 text-xs text-[#53625b] leading-relaxed" id="bank">
                     <?= $payMethodB ? nl2br($payMethodB->description) : '' ?>
                 </div>
             </div>
-            <div class="modal-footer px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button type="button" class="px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold uppercase tracking-wider" data-dismiss="modal">Proceed</button>
+            <div class="modal-footer px-6 py-4 bg-[#f8faf9] border-t border-[#f2f4f3] flex justify-end">
+                <button type="button" class="px-6 py-2.5 rounded-xl bg-[#004226] text-white text-xs font-bold" data-dismiss="modal">Proceed</button>
             </div>
         </div>
     </div>

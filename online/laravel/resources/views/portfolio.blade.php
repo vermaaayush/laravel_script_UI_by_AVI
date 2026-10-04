@@ -60,14 +60,20 @@
         ]);
     }
 
+    $ethWallet = $wallets->where('currency', 'eth')->first();
+
     $walletData = [
         'btc' => [
             'wallet' => $btcWallet,
-            'fund' => $btc_fund
+            'fund' => $btc_fund ?? 0
         ],
         'usdt' => [
             'wallet' => $usdtWallet,
-            'fund' => $usdt_fund
+            'fund' => $usdt_fund ?? 0
+        ],
+        'eth' => [
+            'wallet' => $ethWallet,
+            'fund' => $eth_fund ?? 0
         ],
     ];
 
@@ -145,7 +151,7 @@
                 <p id="total_live_wallet_balance" class="text-3xl sm:text-4xl font-extrabold font-mono text-white mb-4 tracking-tight">$0.00</p>
 
                 @if (!$walletData['btc']['wallet'] || !$walletData['usdt']['wallet'] || (isset($walletData['eth']) && !$walletData['eth']['wallet']))
-                <button class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5 mx-auto" data-bs-toggle="modal" data-bs-target="#addWallet">
+                <button class="bg-[#004226] hover:bg-[#0f5b38] text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5 mx-auto" data-bs-toggle="modal" data-bs-target="#addWallet">
                     + New Asset Wallet
                 </button>
                 @endif
@@ -287,23 +293,23 @@
     </p>
 
                        <div id="wallet_btn_block" class="flex flex-wrap gap-2">
-    <?php if ($walletData['eth']['wallet']): ?>
+    <?php if (!empty($walletData['eth']['wallet'])): ?>
     <button onclick="displayWalletForm('eth', '<?php echo $walletData['eth']['wallet']->address; ?>', '<?php echo $walletData['eth']['fund']; ?>')"
-        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
+        class="bg-[#004226] hover:bg-[#0f5b38] text-white font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         ETH Wallet
     </button>
     <?php endif; ?>
 
-    <?php if ($walletData['btc']['wallet']): ?>
+    <?php if (!empty($walletData['btc']['wallet'])): ?>
     <button onclick="displayWalletForm('btc', '<?php echo $walletData['btc']['wallet']->address; ?>', '<?php echo $walletData['btc']['fund']; ?>')"
-        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
+        class="bg-[#004226] hover:bg-[#0f5b38] text-white font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         BTC Wallet
     </button>
     <?php endif; ?>
 
-    <?php if ($walletData['usdt']['wallet']): ?>
+    <?php if (!empty($walletData['usdt']['wallet'])): ?>
     <button onclick="displayWalletForm('usdt', '<?php echo $walletData['usdt']['wallet']->address; ?>', '<?php echo $walletData['usdt']['fund']; ?>')"
-        class="bg-[#c59b27] hover:bg-[#b0871d] text-black font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
+        class="bg-[#004226] hover:bg-[#0f5b38] text-white font-bold py-2 px-4 rounded-xl transition-all shadow-sm">
         USDT Wallet
     </button>
     <?php endif; ?>
@@ -874,11 +880,11 @@ if (currency === 'btc') {
         // Ensure that wallet balance is properly fetched from PHP
         let walletBalance = 0; // Default to 0 in case of errors
         if (currency === 'btc') {
-            walletBalance =                            <?php echo json_encode($btc_fund); ?> || 0; // Default to 0 if PHP value is null
+            walletBalance = <?php echo json_encode($btc_fund ?? 0); ?> || 0;
         } else if (currency === 'usdt') {
-            walletBalance =                            <?php echo json_encode($usdt_fund); ?> || 0;
+            walletBalance = <?php echo json_encode($usdt_fund ?? 0); ?> || 0;
         } else if (currency === 'eth') {
-            walletBalance =                            <?php echo json_encode($eth_fund); ?> || 0;
+            walletBalance = <?php echo json_encode($eth_fund ?? 0); ?> || 0;
         }
 
         // Log wallet balance for debugging

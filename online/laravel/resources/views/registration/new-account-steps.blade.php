@@ -1,16 +1,19 @@
 @extends('layouts.stack')
 
 @section('content')
-<section class="sign-in-page py-5">
-  <div class="container p-0 ">
-    <div class="row no-gutters height-self-center">
-      <div class="col-sm-12 align-self-center bg-[#0f131a] border border-[#c59b27]/30 shadow-2xl rounded-2xl mb-5">
-        <div class="row m-0 ">
-          <div class="col-md-8 bg-white sign-in-page-data iq-card pb-0 mb-0">
-            <div class="sign-in-from">
-              <div class="p-lg border-b border-outline-variant/30 flex justify-between items-center">
-                <h3 class="mb-0 text-left">Bank Account Registration</h3>
+<section class="sign-in-page py-6 px-3">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="bg-surface-container-lowest border border-outline-variant/30 shadow-xl rounded-3xl overflow-hidden mb-6">
+      <div class="flex flex-col lg:flex-row m-0">
+        <div class="w-full lg:w-2/3 p-6 sm:p-10 bg-surface-container-lowest">
+          <div class="sign-in-from">
+            <div class="pb-4 mb-6 border-b border-outline-variant/30 flex justify-between items-center">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">Institutional Onboarding</span>
+                <h2 class="font-heading font-bold text-2xl text-on-surface mt-2">Bank Account Registration</h2>
               </div>
+              <span class="text-xs text-secondary font-semibold">Tier 1 Clearance</span>
+            </div>
 
               <div class="flex flex-wrap -mx-3">
                 <div class="col-12 text-dark">

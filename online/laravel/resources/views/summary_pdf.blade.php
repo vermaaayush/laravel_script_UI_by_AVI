@@ -1,240 +1,253 @@
-
- <!-- // top navbar -->
-           <?php 
-                    $confiG = DB::table('configs')->where('id','1')->first();
-                    $popupsN = DB::table('ba_pop_pages')->orderby('id','asc')->get();
-                    
-                ?>
+<?php 
+    $confiG = DB::table('configs')->where('id','1')->first();
+    $user_info = DB::table('ba_account_holders')->where('user_id',$u_id)->first();
+?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Summary</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wire Transfer Advice - <?= $confiG->bank_name ?? 'Equitable Bank' ?></title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, body {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        }
+        body {
+            background-color: #f8faf9;
+            color: #191c1c;
+            margin: 0;
+            padding: 30px 15px;
+        }
+        .advice-sheet {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e6e9e8;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 66, 38, 0.05);
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #e6e9e8;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+        }
+        .brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #004226;
+            margin: 0 0 4px 0;
+        }
+        .brand-sub {
+            font-size: 11px;
+            font-weight: 700;
+            color: #53625b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 0;
+        }
+        .doc-type-badge {
+            display: inline-block;
+            background: #e8f7ee;
+            border: 1px solid #c0ebd0;
+            color: #004226;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+            font-size: 12.5px;
+        }
+        .info-card {
+            background: #f8faf9;
+            border: 1px solid #e6e9e8;
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+        .info-card h4 {
+            font-size: 11px;
+            font-weight: 800;
+            color: #004226;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 0 0 10px 0;
+        }
+        .info-card p {
+            margin: 0 0 4px 0;
+            color: #53625b;
+            line-height: 1.5;
+        }
+        .info-card strong {
+            color: #191c1c;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        .table-custom th {
+            background: #f8faf9;
+            color: #004226;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 14px;
+            border: 1px solid #e6e9e8;
+            text-align: left;
+        }
+        .table-custom td {
+            padding: 12px 14px;
+            border: 1px solid #e6e9e8;
+            font-size: 12.5px;
+            color: #191c1c;
+        }
+        .charges-box {
+            background: #f8faf9;
+            border: 1px solid #e6e9e8;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+        .charges-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6e9e8;
+            font-size: 13px;
+        }
+        .charges-row.total {
+            border-bottom: none;
+            padding-top: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #004226;
+        }
+        .footer-legal {
+            border-top: 1px solid #e6e9e8;
+            padding-top: 18px;
+            font-size: 10px;
+            color: #73847c;
+            line-height: 1.5;
+        }
+        @media print {
+            body { background: #ffffff; padding: 0; }
+            .advice-sheet { border: none; box-shadow: none; padding: 0; }
+            .no-print { display: none; }
+        }
+    </style>
 </head>
-<style type="text/css">
-	
-.container{width: 100%;margin:auto;height:auto;padding: 5%;background-color: #f5f5f5;font-size:18px;}
-p{font-size: 16px;}
-td{padding-left: 1%;}
+<body>
+    <div class="advice-sheet">
+        <div class="no-print" style="text-align: right; margin-bottom: 16px;">
+            <button onclick="window.print()" style="background: #004226; color: #ffffff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                Print Document
+            </button>
+        </div>
 
-</style>
-<body style="width: 45%;margin:auto">
- 
+        <div class="header-row">
+            <div>
+                <span class="doc-type-badge">Electronic Funds Settlement Advice</span>
+                <h1 class="brand-title"><?= $confiG->bank_name ?? 'Equitable Bank' ?></h1>
+                <p class="brand-sub">Institutional Wire Operations & Bullion Clearance</p>
+                <p style="font-size: 11px; color: #73847c; margin: 4px 0 0 0;"><?= $confiG->bank_address ?? 'Central Financial Hub' ?></p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 0 0 4px 0; font-size: 11px; color: #53625b;">Advice Date: <strong><?= date("F j, Y") ?></strong></p>
+                <p style="margin: 0; font-size: 11px; color: #53625b;">Phone: <strong><?= $confiG->bank_phone ?? '+1 (800) 555-0199' ?></strong></p>
+                <p style="margin: 2px 0 0 0; font-size: 11px; color: #53625b;">Email: <strong><?= $confiG->bank_email ?? 'settlement@bank.com' ?></strong></p>
+            </div>
+        </div>
 
-	<div class="container">
-	   
-	      <div class="flex flex-wrap -mx-3">
-	      	<div class="w-full md:w-1/2 px-3">
-	      		<img src="https://ibank.firstallianzgroup.com/admin/uploads/{{$logo}}" width="60%">
-	      	</div>
-	      	<div class="col-md-2" style="text-align: right">
-	      	
-	      		
-	      	</div>
-	      	<div class="col-md-4" style="text-align: right">
-	      		<p >{{$confiG->bank_address}}</p>
-	      		
-	      	</div>
-	      </div>
-	     
-	      
-	      <?php 
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>Ordering Customer (Sender)</h4>
+                <p><strong><?= $user_info->title ?? '' ?> <?= $user_info->cust_name ?? '' ?> <?= $user_info->sur_name ?? '' ?></strong></p>
+                <p><?= $user_info->cust_address ?? 'Registered Client Address' ?></p>
+            </div>
+            @foreach ($transaction_summary as $t_summary)
+            <?php 
+                $x = DB::table('ba_other_transfers')->where('user',$t_summary->user_id)->latest('id')->first();                               
+                $benefi_name = $x ? DB::table('ba_beneficiary')->where('id',$x->benefe)->first() : null;
+                $charges = DB::table('ba_transactions')->where('tran_id',$t_summary->tran_id)->where('type','charges')->first();
+                $chargeAmount = $charges ? $charges->amount : 0;
+                $total = $t_summary->amount + $chargeAmount;
+                $footer_text = DB::table('ba_extras')->where('id','2')->first();
+            ?>
+            <div class="info-card">
+                <h4>Beneficiary Counterparty</h4>
+                <p><strong><?= $benefi_name->beneficiary_name ?? 'Designated Recipient' ?></strong></p>
+                <p>Bank: <strong><?= $benefi_name->beneficiary_bank_name ?? 'Target Financial Institution' ?></strong></p>
+                <p>Account: <strong class="font-mono"><?= $benefi_name->beneficiary_account ?? '—' ?></strong></p>
+            </div>
+        </div>
 
-	   $user_info = DB::table('ba_account_holders')->where('user_id',$u_id)->first();  
-	  
-                     
-                    
-                ?>
-	        
-         
-	      <div class="flex flex-wrap -mx-3">
-	          
-	         
-	         <img style="margin-left:-5%;position: absolute;left:6%;top:120px;z-index: 1;" src="https://ibank.firstallianzgroup.com/online/uploads/Screenshot_2022-10-17_173937-removebg-preview.png" width="50px" height="100px">      
-	        
-	          
-	      
-	       
-	       
-	      	<div class="w-full md:w-1/2 px-3" style="text-align: left;">
-	      		<p>{{$user_info->title}} {{$user_info->cust_name}} {{$user_info->sur_name}}<br>{{$user_info->cust_address}}</p>
-	      		
-	      		
-	      	<img src="https://ibank.firstallianzgroup.com/online/uploads/barcode.png" width="50%">
-	      	</div>
-	      	<div class="w-full md:w-1/2 px-3" style="text-align: right;">
-	      		<p><strong>Call us on: </strong> {{$confiG->bank_phone}}<br><strong>Email: </strong> {{$confiG->bank_email}}</p>
-	      		<p><?php echo date("F j, Y") ?></p>
-	      	
-	      	</div>
-	      </div>
-         <br>
-         <br>
-         
-	      <p><strong>Dear {{$user_info->title}} {{$user_info->cust_name}} {{$user_info->sur_name}}</strong></p>
-	      <h5>Confirmation of your electronic funds transfer</h5>
-	      <p>we've sent the following transfer from your account as requested.</p>
-	      <br>
-	    
- @foreach ($transaction_summary as $t_summary)
-	      <table style="width:100%;padding: 1%;" border="1">
-	             <?php 
-                      $x = DB::table('ba_other_transfers')->where('user',$t_summary->user_id)->latest('id')->first();                               
-                                           
-                    $benefi_name = DB::table('ba_beneficiary')->where('id',$x->benefe)->first();
-                    
-                    
-                     $footer_text = DB::table('ba_extras')->where('id','2')->first();
-                    
-                ?>
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Clearing Reference</th>
+                    <th>Execution Timestamp</th>
+                    <th>Channel Type</th>
+                    <th>Settlement Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="font-mono" style="font-weight: 700; color: #004226;">{{ $t_summary->tran_id }}</td>
+                    <td style="color: #53625b;">{{ $t_summary->datetime }}</td>
+                    <td>SWIFT Telegraphic Clearance</td>
+                    <td class="font-mono" style="font-weight: 800; font-size: 14px;">{{ $currency }} {{ number_format($t_summary->amount, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-  <tbody>
-    <tr>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
+        <div class="charges-box">
+            <div class="charges-row">
+                <span style="color: #53625b;">Principal Transfer Amount:</span>
+                <span class="font-mono" style="font-weight: 600;">{{ $currency }} {{ number_format($t_summary->amount, 2) }}</span>
+            </div>
+            <div class="charges-row">
+                <span style="color: #53625b;">Telegraphic / Clearance Surcharge:</span>
+                <span class="font-mono" style="font-weight: 600;">{{ $currency }} {{ number_format($chargeAmount, 2) }}</span>
+            </div>
+            <div class="charges-row total">
+                <span>Total Funds Debited:</span>
+                <span class="font-mono">{{ $currency }} {{ number_format($total, 2) }}</span>
+            </div>
+        </div>
+        @endforeach
 
-      	<strong>From :</strong>
-      	<p>{{$user_info->title}} {{$user_info->cust_name}} {{$user_info->sur_name}}</p>
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
+        <div class="footer-legal">
+            @if(isset($footer_text) && !empty($footer_text->loan_landing_text))
+                <div>{!! $footer_text->loan_landing_text !!}</div>
+            @endif
+            <p style="margin-top: 10px;">This advice is generated automatically by the institutional core ledger and serves as official proof of payment. Authorized by the Prudential Regulation Authority.</p>
+        </div>
+    </div>
 
-      	<strong>To :</strong>
-      	<p>{{$benefi_name->beneficiary_name}}</p>
- 
-      </td>
-    </tr>
-
-    <tr>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
-
-      	<strong>Transaction Date :</strong>
-      	<p>{{$t_summary->datetime}}</p>
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
-
-      	<strong>Transactions Reference :</strong>
-      	<p>{{$t_summary->tran_id}}</p>
- 
-      </td>
-    </tr>
-
-    <tr>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" >
-
-      	<strong>Currency :</strong>
-      	<p>{{ $currency }}</p>
-      	
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" >
-
-      	<strong>Currency Value :</strong>
-      	<p>{{$t_summary->amount}}</p>
-      	
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface">
-
-      	<strong>Exchange Rate :</strong>
-      	<p>1.00000000</p>
-      	
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface">
-
-      <strong>Exchange Value :</strong>
-      	<p>{{$t_summary->amount}}</p>
- 
-      </td>
-    </tr>
-
-    <tr>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
-
-      	<strong>Destination Bank :</strong>
-      	<p>{{$benefi_name->beneficiary_bank_name}}</p>
- 
-      </td>
-      <td class="p-4 border-b border-surface-container-high text-sm text-on-surface" colspan="2">
-
-      	<strong>Destination Account :</strong>
-      	<p>{{$benefi_name->beneficiary_account}}</p>
- 
-      </td>
-     
-    </tr>
-   
-    
-
-     
-    
-   
-  </tbody>
-</table>
-
-<br>
-<strong>Transaction detail:</strong>
-<p>{{$user_info->title}} {{$user_info->cust_name}} {{$user_info->sur_name}}</p>
-<p>{{$t_summary->tran_id}}</p>
-<br>
- <?php 
-                   $charges = DB::table('ba_transactions')->where('tran_id',$t_summary->tran_id)->where('type','charges')->first();
-                   
-                   
-                   $total=$t_summary->amount+$charges->amount;
-                   
-                ?>
-<div class="flex flex-wrap -mx-3">
-	<div class="col-md-5">
-		<br>	<br>
-<strong>CHARGES:</strong>
-<p>SWIFT EXPENSES USD {{$charges->amount}}</p>
-
-
-<br>
-
-           
-	</div>
-	<div class="col-md-7">
-	 <p style="border:1px solid black;padding:3%"><strong>Debited Amount: </strong>{{ $currency }} {{$t_summary->amount}}</p>
-	 <p style="border:1px solid black;padding:3%"><strong>Charges: </strong>{{ $currency }} {{$charges->amount}}</p>
-	 <p style="border:1px solid black;padding:3%"><strong>Total Amount Debited: </strong>{{ $currency }} {{$total}}</p>
-		
-		
-	
-	</div>
-</div>
-
-
-<div class="flex flex-wrap -mx-3">
-	<div class="col-md-5">
-	 <p style="border:1px solid black;padding:3%"><strong>Charge Option: </strong>SHARED</p>
-           
-	</div>
-	<div class="col-md-7">
-
-	</div>
-</div>		
-@endforeach
-
-<br>
-<br>
-
-<div style="font-size:10px">{!! $footer_text->loan_landing_text !!}</div>
-
-
-</div>
-
-
+    <script type="text/javascript">
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        }
+    </script>
 </body>
 </html>
-<script type="text/javascript">
-      window.onload = function() { window.print(); }
- </script>
-<!-- Page Content  -->

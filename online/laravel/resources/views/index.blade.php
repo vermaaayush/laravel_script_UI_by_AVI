@@ -7,844 +7,725 @@
 
 @php
     $user_id = session()->get('user_id');
-    $cust_name = session()->get('cust_name') ?? 'Client';
+    $cust_name = $cust_name ?? (session()->get('cust_name') ?? 'Valued Client');
     $first_name = explode(' ', trim($cust_name))[0];
 
-    $trans_data = DB::table('transactions')
-        ->where('user_id', $user_id)
-        ->orderBy('created_at', 'desc')
-        ->take(6)
-        ->get();
+    // Dynamic accounts from database
+    $userAccounts = $all_accounts ?? [];
+    if(empty($userAccounts) && $user_id) {
+        $userAccounts = DB::table('ba_user_accounts')->where('user_id', $user_id)->orderBy('id', 'asc')->get();
+    }
+    
+    $primaryAcc = count($userAccounts) > 0 ? $userAccounts[0] : null;
+    $cur = $currency ?? ($primaryAcc->account_currency ?? '$');
+    $main_balance = $balance ?? ($primaryAcc->available_balance ?? 0.00);
+    $acno = $acno ?? ($primaryAcc ? ('•••• ' . substr($primaryAcc->account_no, -4)) : 'N/A');
+    $full_acno = $full_acno ?? ($primaryAcc->account_no ?? 'N/A');
+    $actype = $actype ?? ($primaryAcc->account_type ?? 'Commercial Checking');
 
-    $wallets = DB::table('wallets')->where('user_id', $user_id)->get();
-    $user_accounts = DB::table('ba_user_accounts')->where('user_id', $user_id)->get();
-    $active_cards = DB::table('ba_cards')->where('user_id', $user_id)->get();
-    
-    $cur = $currency ?? '$';
-    $main_balance = $balance ?? 0;
-    
-    // Fallback display formatting for rich presentation matching reference
-    $display_balance = ($main_balance > 0) ? $main_balance : 28450.75;
-    $checking_bal = ($main_balance > 0) ? $main_balance : 12450.75;
-    $savings_bal = ($main_balance > 0) ? ($main_balance * 0.35) : 8320.40;
-    $invest_bal = ($main_balance > 0) ? (($main_balance * 0.85) + 1500) : 24120.00;
+    // Dynamic Inflows & Outflows from ba_transactions
+    $txList = $transactions ?? [];
+    if(empty($txList) && $user_id) {
+        $txList = DB::table('ba_transactions')->where('user_id', $user_id)->orderBy('datetime', 'desc')->take(10)->get();
+    }
+
+    $inflowTotal = $total_inflow ?? 0;
+    $inflowCnt = $inflow_count ?? 0;
+    $outflowTotal = $total_outflow ?? 0;
+    $outflowCnt = $outflow_count ?? 0;
+
+    if(!isset($total_inflow) && $user_id) {
+        $allTx = DB::table('ba_transactions')->where('user_id', $user_id)->get();
+        foreach($allTx as $tx) {
+            $amt = (float)($tx->amount ?? 0);
+            $type = strtolower($tx->type ?? '');
+            if($type == 'credited' || $type == 'credit') {
+                $inflowTotal += $amt;
+                $inflowCnt++;
+            } elseif($type == 'debited' || $type == 'debit' || $type == 'charges' || $type == 'charge') {
+                $outflowTotal += $amt;
+                $outflowCnt++;
+            }
+        }
+    }
+
+    $userCards = $cards ?? [];
+    if(empty($userCards) && $user_id) {
+        $userCards = DB::table('ba_cards')->where('user_id', $user_id)->get();
+    }
 @endphp
 
-<div class="max-w-[1440px] mx-auto w-full space-y-6 pb-12">
+<div class="flex flex-col w-full gap-5 pb-12 font-sans">
 
-    <!-- Top Architectural Hero Banner (Exact Equitable Reference) -->
-    <div class="rounded-[26px] overflow-hidden relative shadow-sm border border-slate-200/80 bg-white min-h-[175px] flex flex-col justify-between p-6 sm:p-8"
-         style="background: linear-gradient(90deg, #ffffff 0%, #ffffff 38%, rgba(255, 255, 255, 0.90) 55%, rgba(255, 255, 255, 0.20) 100%), url('{{ asset('images/hero_architecture_banner.jpg') }}') right center / cover no-repeat;">
+    <!-- TOP SOVEREIGN HERO BANNER (Luxurious Sovereign Green Theme with Architecture Backdrop & Green Overlay) -->
+    <div class="relative overflow-hidden rounded-3xl bg-[#002616] text-white p-6 sm:p-8 shadow-xl border border-emerald-900/40">
+        <!-- Architectural Luxury Backdrop Image -->
+        <div class="absolute inset-0 bg-cover bg-center pointer-events-none opacity-30 mix-blend-luminosity scale-105" style="background-image: url('{{ asset('images/hero_architecture_banner.jpg') }}');"></div>
         
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-            <!-- Left: Greeting -->
-            <div class="max-w-md">
-                <p class="text-xs uppercase font-extrabold tracking-widest text-[#c59b27] mb-1">Online Banking Portal</p>
-                <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-slate-900 tracking-tight leading-none">
-                    Hello, <span class="italic font-serif">{{ $first_name }}</span>
-                </h1>
-                <p class="text-slate-500 text-xs sm:text-sm mt-2 font-medium">Manage your finances with confidence.</p>
+        <!-- Sovereign Rich Green Gradients Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#002b19]/95 via-[#003d23]/88 to-[#054d2f]/82 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#002213] via-transparent to-transparent pointer-events-none opacity-60"></div>
+
+        <!-- Ambient glowing orbs & subtle lattice pattern -->
+        <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-emerald-400/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-56 h-56 rounded-full bg-emerald-500/15 blur-2xl pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.03] pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <!-- Left: Greeting & Status Badges -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-emerald-200 text-xs font-semibold border border-white/15 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Secure Banking • Verified Account
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md text-emerald-100/80 text-xs font-mono border border-white/10">
+                        <span class="material-symbols-outlined text-[14px] text-emerald-300">calendar_today</span>
+                        {{ date('D, d M Y') }}
+                    </span>
+                </div>
+
+                <div>
+                    <h1 class="font-heading font-extrabold text-2xl sm:text-4xl text-white tracking-tight leading-tight">
+                        Welcome back, <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-emerald-100">{{ $first_name }}</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-emerald-100/90 mt-1 max-w-xl font-normal leading-relaxed">
+                        Manage your accounts, send money, and track transactions securely.
+                    </p>
+                </div>
             </div>
 
-            <!-- Right: Architectural Promo & Live Timestamp -->
-            <div class="flex flex-col md:items-end justify-between gap-3 text-left md:text-right">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 text-[11px] font-bold text-slate-700 shadow-2xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>{{ date('D, d M Y') }}</span>
-                    <span class="text-slate-300">•</span>
-                    <span class="font-mono text-slate-900" id="hero-live-clock">{{ date('h:i A') }}</span>
-                </div>
-
-                <div class="max-w-sm backdrop-blur-xs rounded-2xl p-2.5">
-                    <h3 class="text-lg sm:text-xl font-display font-bold text-slate-900 tracking-tight">Building a Brighter Tomorrow</h3>
-                    <p class="text-slate-600 text-xs mt-0.5 leading-relaxed font-medium">Trusted banking for a stronger financial future.</p>
-                    <div class="flex items-center md:justify-end gap-2 mt-2.5">
-                        <a href="{{ url('account-statement') }}" class="px-3.5 py-1.5 rounded-xl bg-slate-900/10 hover:bg-slate-900/15 text-slate-900 text-xs font-bold transition-colors">
-                            Statements
-                        </a>
-                        <a href="{{ url('own-account-transfer') }}" class="px-4 py-1.5 rounded-xl gold-gradient-btn text-xs font-bold transition-all inline-flex items-center gap-1 shadow-xs">
-                            <span>Transfer</span>
-                            <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
-                        </a>
-                    </div>
-                </div>
+            <!-- Right: Action Buttons in a Clean Responsive Row -->
+            <div class="flex items-center gap-3 flex-wrap sm:flex-nowrap shrink-0">
+                <a href="{{ url('account-statement') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[17px] text-emerald-300">download</span>
+                    <span>Statement</span>
+                </a>
+                <a href="{{ url('transfer-to-same-bank') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[17px] text-emerald-300">send</span>
+                    <span>Transfer</span>
+                </a>
+                <a href="{{ url('transfer-to-other-bank') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-emerald-300 hover:from-emerald-300 hover:to-white text-[#00331e] text-xs font-extrabold shadow-lg shadow-emerald-950/40 transition-all hover:scale-[1.03] active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[18px]">account_balance</span>
+                    <span>New Wire Transfer</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- 4 Account Summary Cards with Sparklines (Reference Design) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        <!-- Checking Card -->
-        <div class="bg-white rounded-[22px] p-5 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                        <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                    </div>
-                    <span class="text-xs font-bold text-slate-600">Checking</span>
-                </div>
-                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+2.4%</span>
-            </div>
-            <div class="flex items-baseline justify-between mt-2">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight font-sans">
-                        {{ $cur }}{{ number_format($checking_bal, 2) }}
-                    </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5 font-medium">Primary Ledger</p>
-                </div>
-                <!-- Sparkline SVG -->
-                <svg class="w-18 h-9 text-emerald-500" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M2 24 L15 18 L28 22 L42 10 L58 4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </div>
+    @php
+        $totalTurnover = $inflowTotal + $outflowTotal;
+        $inflowPct = $totalTurnover > 0 ? round(($inflowTotal / $totalTurnover) * 100, 1) : 50;
+        $outflowPct = $totalTurnover > 0 ? round(100 - $inflowPct, 1) : 50;
+        $netPosition = $inflowTotal - $outflowTotal;
+        $isSurplus = ($netPosition >= 0);
+    @endphp
 
-        <!-- Savings Card -->
-        <div class="bg-white rounded-[22px] p-5 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                        <span class="material-symbols-outlined text-[20px]">savings</span>
+    <!-- TOP METRICS & CASHFLOW PROGRESS METER (Green Card + Comparative Split Meter) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Card 1: Primary Operating Ledger (Hero Sovereign Gradient) -->
+        <div class="lg:col-span-4 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#004226] via-[#085232] to-[#0f5b38] text-white p-6 shadow-md flex flex-col justify-between group transition-all duration-300 hover:shadow-xl">
+            <!-- Decorative ambient aura -->
+            <div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+            <div>
+                <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                        </div>
+                        <div>
+                            <p class="font-heading font-semibold text-base text-white leading-tight">Operating Balance</p>
+                            <p class="text-xs text-white/80 font-mono">{{ $actype }} • {{ $acno }}</p>
+                        </div>
                     </div>
-                    <span class="text-xs font-bold text-slate-600">Savings</span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-semibold backdrop-blur-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                        Active
+                    </span>
                 </div>
-                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+1.1%</span>
-            </div>
-            <div class="flex items-baseline justify-between mt-2">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight font-sans">
-                        {{ $cur }}{{ number_format($savings_bal, 2) }}
-                    </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5 font-medium">High-Yield APY 4.2%</p>
-                </div>
-                <!-- Sparkline SVG -->
-                <svg class="w-18 h-9 text-amber-500" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M2 20 L15 14 L28 17 L42 8 L58 5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Investment Card -->
-        <div class="bg-white rounded-[22px] p-5 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                        <span class="material-symbols-outlined text-[20px]">trending_up</span>
-                    </div>
-                    <span class="text-xs font-bold text-slate-600">Investment</span>
-                </div>
-                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+3.2%</span>
-            </div>
-            <div class="flex items-baseline justify-between mt-2">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight font-sans">
-                        {{ $cur }}{{ number_format($invest_bal, 2) }}
-                    </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5 font-medium">Diversified Portfolio</p>
-                </div>
-                <!-- Sparkline SVG -->
-                <svg class="w-18 h-9 text-blue-500" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M2 25 L15 20 L28 15 L42 18 L58 6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Crypto Wallet Card -->
-        <div class="bg-white rounded-[22px] p-5 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                        <span class="material-symbols-outlined text-[20px]">currency_bitcoin</span>
-                    </div>
-                    <span class="text-xs font-bold text-slate-600">Crypto Wallet</span>
-                </div>
-                <span class="text-[11px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">- 0.8%</span>
-            </div>
-            <div class="flex items-baseline justify-between mt-2">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight font-sans" id="total_live_wallet_balance">
-                        $1,250.40
-                    </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5 font-medium">BTC • ETH • USDT</p>
-                </div>
-                <!-- Sparkline SVG -->
-                <svg class="w-18 h-9 text-purple-500" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M2 18 L15 22 L28 12 L42 16 L58 4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Middle Hero: Dark Financial Balance Card + Quick Actions 8-Grid (Exact Reference Layout) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <!-- Sleek Dark Total Available Balance Card (lg:col-span-7) -->
-        <div class="lg:col-span-7 dark-hero-card rounded-[26px] p-6 sm:p-8 text-white relative overflow-hidden flex flex-col justify-between min-h-[270px]">
-            <!-- Golden Glow Ambient Background -->
-            <div class="absolute -right-16 -top-16 w-60 h-60 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
-
-            <!-- Top Row: Label & Eye Toggle -->
-            <div class="flex justify-between items-start relative z-10">
-                <div>
-                    <div class="flex items-center gap-2 text-slate-400 text-xs font-semibold tracking-wide">
-                        <span>Total Available Balance</span>
-                        <button onclick="toggleBalanceVisibility()" type="button" class="text-slate-400 hover:text-white transition-colors" title="Toggle visibility">
-                            <span class="material-symbols-outlined text-[17px]" id="eye-icon">visibility</span>
-                        </button>
-                    </div>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-xl sm:text-2xl text-[#dfbb58] font-bold tracking-tight">{{ $cur }}</span>
-                        <span class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-sans" id="total_balance_display">
-                            {{ number_format($display_balance, 2) }}
+                <div class="mt-6 flex flex-wrap items-baseline justify-between gap-2">
+                    <div class="flex items-baseline min-w-0">
+                        <span class="text-xs sm:text-sm font-extrabold text-emerald-200 mr-1.5 select-none shrink-0">{{ $cur }}</span>
+                        <span class="font-heading font-extrabold text-2xl lg:text-xl xl:text-2xl 2xl:text-3xl tracking-tight text-white truncate tabular-nums">
+                            {{ number_format($main_balance, 2) }}
                         </span>
-                        <span id="masked_balance_display" class="hidden text-3xl sm:text-4xl font-mono text-slate-300">••••••••</span>
                     </div>
-                    <div class="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-semibold mt-2.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-                        <span class="material-symbols-outlined text-[15px]">trending_up</span>
-                        <span>+12.4% vs last month</span>
-                    </div>
-                </div>
-
-                <!-- Currency Badge / Quick Switch -->
-                <div class="px-3 py-1 rounded-xl bg-white/10 text-white text-xs font-bold border border-white/10 backdrop-blur-md">
-                    {{ $currency ?? 'USD' }} Account
+                    <span class="text-xs text-white/80 font-medium">
+                        {{ count($userAccounts) }} {{ count($userAccounts) == 1 ? 'Operating Account' : 'Operating Accounts' }}
+                    </span>
                 </div>
             </div>
-
-            <!-- Glowing Wave Line Decoration (Inspired by Reference Golden Wave) -->
-            <div class="w-full my-4 relative h-16 pointer-events-none">
-                <svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 400 60">
-                    <defs>
-                        <linearGradient id="goldWaveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#e5c07b" stop-opacity="0.38" />
-                            <stop offset="100%" stop-color="#c59b27" stop-opacity="0.0" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M 0 50 Q 80 40 140 32 T 260 20 T 360 8 L 400 5 L 400 60 L 0 60 Z" fill="url(#goldWaveGradient)" />
-                    <path d="M 0 50 Q 80 40 140 32 T 260 20 T 360 8 L 400 5" fill="none" stroke="#e5c07b" stroke-width="2.5" />
-                </svg>
-            </div>
-
-            <!-- Bottom Actions -->
-            <div class="flex flex-wrap items-center gap-3 relative z-10 pt-2 border-t border-white/10">
-                <a href="{{ url('account-statement') }}" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-md border border-white/15 transition-all flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[16px]">description</span>
-                    <span>View Statement</span>
+            <div class="mt-6 pt-3 flex items-center justify-between text-white/90 border-t border-white/15">
+                <a href="{{ url('account-statement') }}" class="text-xs font-semibold hover:text-white flex items-center gap-1">
+                    <span>Export Statement</span>
+                    <span class="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
                 </a>
-                <a href="{{ url('own-account-transfer') }}" class="px-5 py-2.5 rounded-xl gold-gradient-btn text-xs font-bold transition-all flex items-center gap-2 shadow-gold">
-                    <span class="material-symbols-outlined text-[16px]">add_circle</span>
-                    <span>+ New Transfer</span>
+                <a href="{{ url('accounts-summary') }}" class="text-xs font-semibold text-white/70 hover:text-white">
+                    <span>All Accounts</span>
                 </a>
-                <div class="ml-auto hidden sm:flex items-center gap-4 text-xs text-slate-400">
-                    <div>Ledger: <span class="text-white font-semibold">{{ $cur }}{{ number_format($display_balance, 2) }}</span></div>
-                    <div>Holds: <span class="text-white font-semibold">{{ $cur }}0.00</span></div>
-                </div>
             </div>
         </div>
 
-        <!-- Quick Actions 8-Card Grid (lg:col-span-5) -->
-        <div class="lg:col-span-5 bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-slate-900 tracking-tight">Quick Actions</h3>
-                <a href="{{ url('accounts-summary') }}" class="text-xs font-semibold text-[#c59b27] hover:underline flex items-center gap-1">
-                    <span>Customize</span>
-                    <span class="material-symbols-outlined text-[14px]">tune</span>
-                </a>
-            </div>
-
-            <div class="grid grid-cols-4 gap-2.5">
-                <!-- Action 1: Transfer -->
-                <a href="{{ url('own-account-transfer') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">sync_alt</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Transfer</span>
-                </a>
-
-                <!-- Action 2: Pay Bills -->
-                <a href="{{ url('pay-invoice') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">receipt_long</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Pay Bills</span>
-                </a>
-
-                <!-- Action 3: Cards -->
-                <a href="{{ url('view-cards') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">credit_card</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Cards</span>
-                </a>
-
-                <!-- Action 4: Loan -->
-                <a href="{{ url('request-loan') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Loan</span>
-                </a>
-
-                <!-- Action 5: Invest -->
-                <a href="{{ url('portfolio') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">show_chart</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Invest</span>
-                </a>
-
-                <!-- Action 6: Contacts / Beneficiaries -->
-                <a href="{{ url('manage-beneficiaries') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">group</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Contacts</span>
-                </a>
-
-                <!-- Action 7: Cheque -->
-                <a href="{{ url('request-cheque-book') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">fact_check</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">Cheque</span>
-                </a>
-
-                <!-- Action 8: More -->
-                <a href="{{ url('account-statement') }}" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-[#faf6ed] hover:border-[#e9c668]/50 border border-slate-100 transition-all group text-center">
-                    <div class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-slate-700 group-hover:text-[#c59b27] group-hover:scale-105 transition-all mb-1.5">
-                        <span class="material-symbols-outlined text-[20px]">more_horiz</span>
-                    </div>
-                    <span class="text-[11.5px] font-semibold text-slate-700 group-hover:text-[#9c7614]">More</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Middle-Bottom: Market Overview, Account Overview & Card Showcase -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <!-- Market Overview Widget (lg:col-span-6) -->
-        <div class="lg:col-span-6 bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <div class="flex items-center gap-2">
-                    <h3 class="text-base font-bold text-slate-900 tracking-tight">Market Overview</h3>
-                    <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Live Global</span>
-                </div>
-                <!-- Timeframe Selector -->
-                <div class="flex items-center bg-slate-100 rounded-xl p-1 text-[11px] font-bold text-slate-500">
-                    <button class="px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-2xs">1D</button>
-                    <button class="px-2.5 py-1 hover:text-slate-900">1W</button>
-                    <button class="px-2.5 py-1 hover:text-slate-900">1M</button>
-                    <button class="px-2.5 py-1 hover:text-slate-900">1Y</button>
-                </div>
-            </div>
-
-            <!-- Market Tickers Pills (Reference Design) -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-4">
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">S&P 500</span>
-                    <span class="text-xs font-bold text-emerald-600">+0.78%</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">Nasdaq</span>
-                    <span class="text-xs font-bold text-emerald-600">+0.94%</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">Dow 30</span>
-                    <span class="text-xs font-bold text-emerald-600">+0.52%</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">Bitcoin</span>
-                    <span class="text-xs font-bold text-rose-500">-0.51%</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">Ethereum</span>
-                    <span class="text-xs font-bold text-emerald-600">+1.21%</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700">EUR/USD</span>
-                    <span class="text-xs font-bold text-emerald-600">+0.15%</span>
-                </div>
-            </div>
-
-            <!-- TradingView Embedded Frame (Preserved Live Feed) -->
-            <div class="h-64 w-full rounded-2xl overflow-hidden border border-slate-100">
-                <iframe scrolling="no" allowtransparency="true" frameborder="0" src="https://s.tradingview.com/embed-widget/market-overview/?locale=en#%7B%22colorTheme%22%3A%22light%22%2C%22dateRange%22%3A%2212m%22%2C%22showChart%22%3Atrue%2C%22isTransparent%22%3Atrue%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22tabs%22%3A%5B%7B%22title%22%3A%22Indices%22%2C%22symbols%22%3A%5B%7B%22s%22%3A%22FOREXCOM%3ASPXUSD%22%2C%22d%22%3A%22S%26P%20500%22%7D%2C%7B%22s%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22d%22%3A%22Nasdaq%22%7D%2C%7B%22s%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22d%22%3A%22Bitcoin%22%7D%5D%7D%5D%7D" class="w-full h-full border-0"></iframe>
-            </div>
-        </div>
-
-        <!-- Account Overview List (lg:col-span-3) -->
-        <div class="lg:col-span-3 bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-slate-900 tracking-tight">Account Overview</h3>
-                <a href="{{ url('accounts-summary') }}" class="text-xs font-semibold text-[#c59b27] hover:underline">View All</a>
-            </div>
-
-            <div class="flex flex-col gap-3">
-                <!-- Checking -->
-                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
+        <!-- Card 2: Visual Cashflow & Liquidity Progress Meter (Col 8) -->
+        <div class="lg:col-span-8 rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div>
+                <!-- Top Status Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-surface-container">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-slate-900 text-[#dfbb58] flex items-center justify-center font-bold text-xs shadow-2xs">
-                            <span class="material-symbols-outlined text-[18px]">account_balance</span>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#004226] border border-emerald-100 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-[22px]">swap_horiz</span>
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-slate-900">Checking Account</p>
-                            <p class="text-[11px] text-slate-400">7682 •••• 4582</p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-bold text-slate-900 font-mono">{{ $cur }}{{ number_format($checking_bal, 2) }}</span>
-                </div>
-
-                <!-- Savings -->
-                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
-                            <span class="material-symbols-outlined text-[18px]">savings</span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-900">Savings Account</p>
-                            <p class="text-[11px] text-slate-400">7621 •••• 7912</p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-bold text-slate-900 font-mono">{{ $cur }}{{ number_format($savings_bal, 2) }}</span>
-                </div>
-
-                <!-- Investment -->
-                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
-                            <span class="material-symbols-outlined text-[18px]">trending_up</span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-900">Investment Account</p>
-                            <p class="text-[11px] text-slate-400">7621 •••• 6690</p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-bold text-slate-900 font-mono">{{ $cur }}{{ number_format($invest_bal, 2) }}</span>
-                </div>
-
-                <!-- Crypto -->
-                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
-                            <span class="material-symbols-outlined text-[18px]">currency_bitcoin</span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-900">Crypto Wallet</p>
-                            <p class="text-[11px] text-slate-400">TRC20 •••• 4421</p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-bold text-slate-900 font-mono">$1,250.40</span>
-                </div>
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>Account Type: <strong class="text-slate-800">{{ $actype ?? 'Premier Commercial' }}</strong></span>
-                <span class="text-emerald-600 font-bold">Active</span>
-            </div>
-        </div>
-
-        <!-- Card Overview (lg:col-span-3) - Sleek VISA Card Mockup (Exact Reference) -->
-        <div class="lg:col-span-3 bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-base font-bold text-slate-900 tracking-tight">Card Overview</h3>
-                <a href="{{ url('view-cards') }}" class="text-xs font-semibold text-[#c59b27] hover:underline">Manage</a>
-            </div>
-
-            <!-- Sleek Dark Metallic VISA Card -->
-            <div class="card-visa-metallic rounded-2xl p-5 text-white shadow-xl flex flex-col justify-between h-44 relative group transition-transform duration-300 hover:scale-[1.02]">
-                <div class="flex items-center justify-between relative z-10">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#dfbb58] text-[20px]">account_balance</span>
-                        <span class="text-xs font-bold tracking-wider uppercase text-white font-sans">{{ $confiG->bank_name ?? 'Equitable' }}</span>
-                    </div>
-                    <span class="material-symbols-outlined text-slate-400 text-[22px]">contactless</span>
-                </div>
-
-                <!-- Chip & Number -->
-                <div class="relative z-10 my-1">
-                    <div class="w-8 h-6 rounded bg-gradient-to-tr from-amber-400 to-amber-200 shadow-inner mb-3 border border-amber-500/40"></div>
-                    <p class="text-sm font-mono tracking-widest text-slate-200">•••• •••• •••• 4582</p>
-                </div>
-
-                <!-- Cardholder Name & VISA Logo -->
-                <div class="flex items-end justify-between relative z-10 pt-1">
-                    <div>
-                        <p class="text-[9px] uppercase tracking-wider text-slate-400">Cardholder</p>
-                        <p class="text-xs font-bold uppercase tracking-wide text-white truncate max-w-[130px]">{{ $cust_name }}</p>
-                    </div>
-                    <span class="text-sm font-black italic tracking-widest text-[#dfbb58]">VISA</span>
-                </div>
-            </div>
-
-            <!-- Available Limit Bar (From Reference Design) -->
-            <div class="mt-4">
-                <div class="flex justify-between items-center text-xs mb-1.5">
-                    <span class="text-slate-500 font-medium">Available Limit</span>
-                    <span class="font-bold text-slate-900 font-mono">{{ $cur }}4,250.00 / {{ $cur }}10,000.00</span>
-                </div>
-                <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                    <div class="h-full rounded-full bg-gradient-to-r from-amber-500 to-[#c59b27]" style="width: 42.5%"></div>
-                </div>
-                <p class="text-[10.5px] text-slate-400 text-right mt-1 font-medium">42.5% Utilized</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Row: Recent Transactions, Spending Analytics & Upcoming Payments -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <!-- Recent Transactions Table (lg:col-span-5) -->
-        <div class="lg:col-span-5 bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 tracking-tight">Recent Transactions</h3>
-                    <p class="text-[11px] text-slate-400">Latest account activity</p>
-                </div>
-                <a href="{{ url('transactionslist') }}" class="text-xs font-semibold text-[#c59b27] hover:underline">View All</a>
-            </div>
-
-            <div class="divide-y divide-slate-100">
-                @if(count($trans_data) > 0)
-                    @foreach($trans_data as $tx)
-                    <div class="py-3 flex items-center justify-between hover:bg-slate-50/80 px-2 -mx-2 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 {{ $tx->type == 'credit' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-700' }}">
-                                <span class="material-symbols-outlined text-[18px]">{{ $tx->type == 'credit' ? 'south_west' : 'north_east' }}</span>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[13px] font-bold text-slate-800 truncate max-w-[180px]">{{ $tx->description ?? 'Transaction Record' }}</p>
-                                <p class="text-[11px] text-slate-400">{{ date('d M Y, h:i A', strtotime($tx->created_at)) }}</p>
-                            </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <p class="text-xs font-bold font-mono {{ $tx->type == 'credit' ? 'text-emerald-600' : 'text-slate-900' }}">
-                                {{ $tx->type == 'credit' ? '+' : '-' }}{{ $cur }}{{ number_format($tx->amount, 2) }}
+                            <h3 class="font-heading font-bold text-base text-on-surface">Cashflow Dynamics & Volume Split</h3>
+                            <p class="text-xs text-secondary">
+                                @if(($inflowCnt + $outflowCnt) > 0)
+                                    Comparing inbound deposits vs outbound dispatches ({{ $inflowCnt + $outflowCnt }} total)
+                                @else
+                                    No ledger transactions recorded in active period
+                                @endif
                             </p>
-                            <span class="text-[10px] font-semibold text-slate-400 capitalize">{{ $tx->status ?? 'Completed' }}</span>
                         </div>
                     </div>
-                    @endforeach
+                    <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full {{ $isSurplus ? 'bg-emerald-50 text-[#004226] border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200' }} text-xs font-bold whitespace-nowrap shadow-xs">
+                            <span class="w-2 h-2 rounded-full {{ $isSurplus ? 'bg-[#004226]' : 'bg-amber-600' }} shrink-0"></span>
+                            <span class="tabular-nums font-semibold">{{ $isSurplus ? '+' : '-' }}{{ $cur }} {{ number_format(abs($netPosition), 2) }}</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider">{{ $netPosition == 0 ? 'Balanced' : ($isSurplus ? 'Surplus' : 'Deficit') }}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Main Volume Breakdown (Two Columns: Inflow vs Outflow) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
+                    <!-- Inbound Liquidity Stats -->
+                    <div class="p-4 rounded-xl bg-gradient-to-br from-[#f2f8f4] to-[#e7f3ec] border border-[#cfe5d8] relative overflow-hidden transition-all hover:border-[#b5d9c3]">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-[#004226] flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#004226]"></span>
+                                Inbound Flow
+                            </span>
+                            <span class="text-xs font-bold text-[#004226] bg-white/80 px-2.5 py-0.5 rounded-full border border-[#c2dfcd] tabular-nums">
+                                {{ $inflowPct }}%
+                            </span>
+                        </div>
+                        <div class="mt-2.5 flex items-baseline gap-1.5">
+                            <span class="font-heading font-extrabold text-2xl sm:text-3xl text-[#004226] tracking-tight tabular-nums">
+                                +{{ $cur }} {{ number_format($inflowTotal, 2) }}
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-[#28573e] mt-1.5 font-medium flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                            {{ $inflowCnt }} {{ $inflowCnt == 1 ? 'Credit deposit' : 'Credit deposits' }} recorded
+                        </p>
+                    </div>
+
+                    <!-- Outbound Dispatches Stats -->
+                    <div class="p-4 rounded-xl bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] border border-[#e2e8f0] relative overflow-hidden transition-all hover:border-slate-300">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                                <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                                Outbound Flow
+                            </span>
+                            <span class="text-xs font-bold text-slate-600 bg-white/80 px-2.5 py-0.5 rounded-full border border-slate-200 tabular-nums">
+                                {{ $outflowPct }}%
+                            </span>
+                        </div>
+                        <div class="mt-2.5 flex items-baseline gap-1.5">
+                            <span class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-800 tracking-tight tabular-nums">
+                                -{{ $cur }} {{ number_format($outflowTotal, 2) }}
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1.5 font-medium flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+                            {{ $outflowCnt }} {{ $outflowCnt == 1 ? 'Debit dispatch' : 'Debit dispatches' }} recorded
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Visual Comparative Split Progress Bar -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="flex items-center gap-1 font-semibold text-[#004226]">
+                            <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                            Inbound Share ({{ $inflowPct }}%)
+                        </span>
+                        <span class="flex items-center gap-1 font-semibold text-slate-600">
+                            Outbound Share ({{ $outflowPct }}%)
+                            <span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                        </span>
+                    </div>
+
+                    <!-- Dual Segment Colored Bar -->
+                    <div class="w-full h-3 rounded-full bg-slate-100 overflow-hidden flex p-0.5 border border-slate-200/70 shadow-inner">
+                        <div class="h-full bg-gradient-to-r from-[#004226] to-[#0d5937] transition-all duration-500 rounded-l-full" style="width: {{ $inflowPct }}%"></div>
+                        <div class="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500 rounded-r-full" style="width: {{ $outflowPct }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Telemetry & Navigation -->
+            <div class="mt-4 pt-3.5 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-surface-container">
+                <div class="flex items-center gap-2">
+                    <span class="text-secondary font-medium">Total Volume:</span>
+                    <strong class="font-heading font-extrabold text-on-surface text-sm tabular-nums">{{ $cur }} {{ number_format($totalTurnover, 2) }}</strong>
+                </div>
+                <a href="{{ url('spend-analysis') }}" class="font-bold text-[#004226] hover:text-[#0b4d30] flex items-center gap-1 group/link transition-colors">
+                    <span>Full Spend & Cashflow Analytics</span>
+                    <span class="material-symbols-outlined text-[15px] group-hover/link:translate-x-0.5 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MIDDLE SECTION: MULTI-CURRENCY OPERATING ACCOUNTS (Col 5) & TRADINGVIEW FX/MARKET OVERVIEW (Col 7) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- LEFT: Operating Accounts & Rails (Col 5) -->
+        <div class="lg:col-span-5 rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-heading font-bold text-lg text-on-surface">Operating Accounts</h2>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            <p class="text-xs text-secondary">Verified Customer Treasury Vaults</p>
+                        </div>
+                    </div>
+                    <a href="{{ url('additional-accounts') }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface text-xs font-semibold hover:bg-surface-container transition-colors border border-outline-variant/20">
+                        <span class="material-symbols-outlined text-[16px] text-primary">add</span>
+                        <span>Open Account</span>
+                    </a>
+                </div>
+
+                <!-- Dynamic Accounts Loop -->
+                <div class="space-y-3 mt-4">
+                    @forelse($userAccounts as $accItem)
+                        @php
+                            $accCur = $accItem->account_currency ?: 'USD';
+                            $accBal = (float)($accItem->available_balance ?? 0);
+                            $flag = ($accCur == 'CAD') ? '🇨🇦' : (($accCur == 'EUR') ? '🇪🇺' : (($accCur == 'GBP') ? '🇬🇧' : '🇺🇸'));
+                        @endphp
+                        <div class="rounded-xl bg-surface-container-low p-4 hover:bg-surface-container transition-all group relative border border-outline-variant/20">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xl leading-none">{{ $flag }}</span>
+                                    <div>
+                                        <span class="font-heading font-bold text-sm text-on-surface block">
+                                            {{ $accItem->account_type ?: 'Operating Vault' }} ({{ $accCur }})
+                                        </span>
+                                        <span class="text-[11px] text-secondary font-mono">
+                                            Acc: •••• {{ substr($accItem->account_no, -4) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
+                                    Active
+                                </span>
+                            </div>
+                            <div class="mt-3 flex items-baseline justify-between">
+                                <div>
+                                    <p class="font-heading font-bold text-lg text-on-surface font-mono">
+                                        {{ $accCur }} {{ number_format($accBal, 2) }}
+                                    </p>
+                                </div>
+                                <a href="{{ url('account-statement') }}" class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5">
+                                    <span>Statement</span>
+                                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                </a>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="py-6 text-center rounded-xl bg-surface-container-low border border-dashed border-outline-variant/40">
+                            <span class="material-symbols-outlined text-[32px] text-secondary mb-1">account_balance</span>
+                            <p class="text-xs font-semibold text-on-surface">No secondary accounts configured</p>
+                            <a href="{{ url('additional-accounts') }}" class="text-xs font-bold text-primary hover:underline mt-1 inline-block">
+                                + Request Additional Currency Account
+                            </a>
+                        </div>
+                    @endforelse
+
+                    @if(count($userAccounts) == 1)
+                        <!-- Secondary Account Requisition Banner -->
+                        <a href="{{ url('additional-accounts') }}" class="block rounded-xl border border-dashed border-outline-variant/40 p-3.5 hover:bg-surface-container-low transition-colors group">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                                    </span>
+                                    <div>
+                                        <p class="text-xs font-bold text-on-surface">Open Multi-Currency Vault</p>
+                                        <p class="text-[11px] text-secondary">Add EUR, GBP, USD, or CAD accounts instantly</p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-[18px] text-secondary group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+                            </div>
+                        </a>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Fast Banking Action Rails -->
+            <div class="mt-6 pt-4 border-t border-surface-container grid grid-cols-4 gap-2 text-center">
+                <a href="{{ url('transfer-to-same-bank') }}" class="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-surface-container transition-all group">
+                    <div class="w-9 h-9 rounded-full bg-primary-fixed/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">send</span>
+                    </div>
+                    <span class="text-xs font-semibold text-on-surface">Internal</span>
+                </a>
+                <a href="{{ url('transfer-to-other-bank') }}" class="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-surface-container transition-all group">
+                    <div class="w-9 h-9 rounded-full bg-secondary-container/50 flex items-center justify-center text-secondary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">account_balance</span>
+                    </div>
+                    <span class="text-xs font-semibold text-on-surface">Wire FX</span>
+                </a>
+                <a href="{{ url('account-statement') }}" class="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-surface-container transition-all group">
+                    <div class="w-9 h-9 rounded-full bg-secondary-container/50 flex items-center justify-center text-secondary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">description</span>
+                    </div>
+                    <span class="text-xs font-semibold text-on-surface">Statement</span>
+                </a>
+                <a href="{{ url('manage-beneficiaries') }}" class="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-surface-container transition-all group">
+                    <div class="w-9 h-9 rounded-full bg-secondary-container/50 flex items-center justify-center text-secondary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">group</span>
+                    </div>
+                    <span class="text-xs font-semibold text-on-surface">Payees</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- RIGHT: TradingView Institutional Market & FX Overview (Col 7) -->
+        <div class="lg:col-span-7 rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <h2 class="font-heading font-bold text-lg text-on-surface">Global Treasury & FX Rails</h2>
+                        <p class="text-xs text-secondary">Real-time interbank foreign exchange & commodity liquidity benchmarks</p>
+                    </div>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#eaf4ee] text-[#004226] text-[11px] font-bold border border-[#c4e3cf]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#004226] animate-pulse"></span>
+                        Live Feed
+                    </span>
+                </div>
+
+                <!-- TradingView Symbol Overview Interactive Chart -->
+                <div class="rounded-xl overflow-hidden mt-3 border border-outline-variant/20 bg-white" style="height: 330px;">
+                    <div class="tradingview-widget-container" style="height: 100%; width: 100%;">
+                        <div class="tradingview-widget-container__widget" style="height: 100%; width: 100%;"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                        {
+                            "symbols": [
+                                [ "EUR/USD", "FX_IDC:EURUSD|1D" ],
+                                [ "GBP/USD", "FX_IDC:GBPUSD|1D" ],
+                                [ "USD/CAD", "FX_IDC:USDCAD|1D" ],
+                                [ "USD/JPY", "FX_IDC:USDJPY|1D" ],
+                                [ "Gold", "TVC:GOLD|1D" ],
+                                [ "Bitcoin", "BITSTAMP:BTCUSD|1D" ]
+                            ],
+                            "chartOnly": false,
+                            "width": "100%",
+                            "height": "100%",
+                            "locale": "en",
+                            "colorTheme": "light",
+                            "autosize": true,
+                            "showVolume": false,
+                            "showMA": false,
+                            "hideDateRanges": false,
+                            "hideMarketStatus": false,
+                            "hideSymbolLogo": false,
+                            "scalePosition": "right",
+                            "scaleMode": "Normal",
+                            "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+                            "fontSize": "11",
+                            "noTimeScale": false,
+                            "valuesTracking": "1",
+                            "changeMode": "price-and-percent",
+                            "chartType": "area",
+                            "lineColor": "#004226",
+                            "topColor": "rgba(0, 66, 38, 0.28)",
+                            "bottomColor": "rgba(0, 66, 38, 0.02)",
+                            "lineWidth": 2,
+                            "headerFontSize": "small",
+                            "dateRanges": [
+                                "1d|1",
+                                "1m|30",
+                                "3m|60",
+                                "12m|1D",
+                                "all|1M"
+                            ]
+                        }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 flex items-center justify-between text-secondary text-xs border-t border-surface-container">
+                <span class="font-mono">Streaming 24/7 Global Interbank Clearing Benchmarks</span>
+                <a href="{{ url('martketplace') }}" class="font-bold text-[#004226] hover:underline flex items-center gap-1">
+                    <span>Full Market Matrix</span>
+                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SECTION: COMPREHENSIVE ACTIVITY TABLE (Col 8) + EXECUTIVE CARDS & FACILITIES (Col 4) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- MAIN TABLE: Recent Verified Settlements & Ledger Activity (Col 8) -->
+        <div class="lg:col-span-8 rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="font-heading font-bold text-lg text-on-surface">Recent Settlements & Verified Ledger</h2>
+                        <p class="text-xs text-secondary">Real-time ledger entries from your institutional custody account</p>
+                    </div>
+                    <!-- Table Controls -->
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex items-center bg-surface-container-low rounded-lg px-2.5 py-1.5 focus-within:bg-surface-container border border-outline-variant/20">
+                            <span class="material-symbols-outlined text-secondary text-[18px] mr-1.5">search</span>
+                            <input class="bg-transparent text-xs text-on-surface placeholder:text-secondary focus:outline-none w-32 sm:w-44" id="activity-search" oninput="filterActivities(this.value)" placeholder="Search transactions..." type="text"/>
+                        </div>
+                        <a href="{{ url('transactionslist') }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface text-xs font-semibold hover:bg-surface-container transition-colors border border-outline-variant/20">
+                            <span class="material-symbols-outlined text-[16px] text-secondary">tune</span>
+                            <span>All Records</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="text-secondary text-[11px] uppercase tracking-wider font-semibold border-b border-surface-container bg-surface-container-low/50">
+                                <th class="py-3 px-3">Transaction</th>
+                                <th class="py-3 px-3">Reference ID</th>
+                                <th class="py-3 px-3">Timestamp</th>
+                                <th class="py-3 px-3 text-right">Amount</th>
+                                <th class="py-3 px-3 text-center">Status</th>
+                                <th class="py-3 px-2 text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-surface-container" id="activity-table-body">
+                            @forelse($txList as $tr)
+                                @php
+                                    $rawType = strtolower($tr->type ?? '');
+                                    $isCredit = ($rawType == 'credited' || $rawType == 'credit');
+                                    $isCharge = ($rawType == 'charges' || $rawType == 'charge');
+                                    $amt = (float)($tr->amount ?? 0);
+                                    $dateStr = !empty($tr->datetime) ? date('d M Y, H:i', strtotime($tr->datetime)) : (!empty($tr->created_at) ? date('d M Y, H:i', strtotime($tr->created_at)) : 'Recent');
+                                    $refId = !empty($tr->tran_id) ? $tr->tran_id : ('TXN_' . substr(md5($tr->id ?? rand()), 0, 8));
+                                    $reason = !empty($tr->reason) ? $tr->reason : ($isCredit ? 'Inbound Account Settlement' : ($isCharge ? 'Operational Service Surcharge' : 'Institutional Outbound Wire'));
+                                @endphp
+                                <tr class="activity-row hover:bg-surface-container-low transition-colors group">
+                                    <td class="py-3 px-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg {{ $isCredit ? 'bg-[#eaf4ee] text-[#004226]' : ($isCharge ? 'bg-amber-50 text-amber-700' : 'bg-surface-container text-secondary') }} flex items-center justify-center font-bold text-xs shrink-0">
+                                                <span class="material-symbols-outlined text-[18px]">
+                                                    {{ $isCredit ? 'arrow_downward' : ($isCharge ? 'receipt_long' : 'arrow_upward') }}
+                                                </span>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <span class="font-heading font-semibold text-xs text-on-surface block truncate max-w-[200px] sm:max-w-xs">
+                                                    {{ $reason }}
+                                                </span>
+                                                <span class="text-[11px] text-secondary font-mono">
+                                                    {{ $isCredit ? 'Credit Settlement' : ($isCharge ? 'Clearing Fee' : 'Debit Outflow') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 font-mono text-secondary text-[11px] whitespace-nowrap">{{ $refId }}</td>
+                                    <td class="py-3 px-3 text-secondary text-[11px] whitespace-nowrap">{{ $dateStr }}</td>
+                                    <td class="py-3 px-3 text-right font-mono font-bold whitespace-nowrap {{ $isCredit ? 'text-[#004226]' : ($isCharge ? 'text-amber-800' : 'text-on-surface') }}">
+                                        {{ $isCredit ? '+' : '-' }}{{ $cur }} {{ number_format($amt, 2) }}
+                                    </td>
+                                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#eaf4ee] text-[#004226] font-semibold text-[11px] border border-[#c4e3cf]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-[#004226]"></span>
+                                            Settled
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-2 text-right">
+                                        <a href="{{ url('transactionslist') }}" class="text-secondary hover:text-on-surface p-1 rounded hover:bg-surface-container inline-block">
+                                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <!-- Clean Elegant Empty State (No fake static mock data) -->
+                                <tr>
+                                    <td colspan="6" class="py-12 px-4 text-center">
+                                        <div class="max-w-sm mx-auto flex flex-col items-center">
+                                            <div class="w-12 h-12 rounded-2xl bg-surface-container-low flex items-center justify-center text-secondary mb-3">
+                                                <span class="material-symbols-outlined text-[28px]">receipt_long</span>
+                                            </div>
+                                            <h4 class="font-heading font-bold text-sm text-on-surface">No Settlement History Yet</h4>
+                                            <p class="text-xs text-secondary mt-1 leading-relaxed">
+                                                Your institutional custody account is active. Dispatched wires and inbound credits will appear here with live clearing verification.
+                                            </p>
+                                            <div class="mt-4 flex items-center gap-2">
+                                                <a href="{{ url('transfer-to-other-bank') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#004226] text-white text-xs font-bold shadow-sm hover:bg-[#085232] transition-colors">
+                                                    <span class="material-symbols-outlined text-[15px]">send</span>
+                                                    <span>New Wire</span>
+                                                </a>
+                                                <a href="{{ url('account-statement') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface text-xs font-semibold hover:bg-surface-container transition-colors">
+                                                    <span>Statement</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer info -->
+            <div class="mt-4 pt-3 flex items-center justify-between text-secondary text-xs border-t border-surface-container">
+                <span class="font-mono">Displaying verified customer transactions</span>
+                <div class="flex items-center gap-2">
+                    <a href="{{ url('transactionslist') }}" class="text-[#004226] font-bold hover:underline flex items-center gap-1">
+                        <span>Full Transaction History</span>
+                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COMPLEMENTARY: CORPORATE CARDS & TREASURY INTELLIGENCE (Col 4) -->
+        <div class="lg:col-span-4 flex flex-col gap-5">
+            <!-- Executive Debit / Corporate Card Container -->
+            <div class="rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <span class="font-heading font-bold text-sm text-on-surface block">Commercial Card Facility</span>
+                        <span class="text-[11px] text-secondary">Contactless Visa / Mastercard Rail</span>
+                    </div>
+                    <a href="{{ url('view-cards') }}" class="material-symbols-outlined text-secondary text-[20px] hover:text-on-surface" title="View Cards">credit_card</a>
+                </div>
+
+                @if(count($userCards) > 0)
+                    @php $cardItem = $userCards[0]; @endphp
+                    <!-- Active User Issued Card -->
+                    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-tr from-[#191c1c] via-[#242826] to-[#004226] text-white p-6 shadow-xl border border-white/10 group transition-transform hover:scale-[1.01] duration-300">
+                        <div class="flex items-start justify-between">
+                            <span class="font-heading font-bold tracking-wider text-emerald-300 text-sm">Institutional Commercial</span>
+                            <span class="material-symbols-outlined text-[24px] text-emerald-300">contactless</span>
+                        </div>
+                        <div class="my-6">
+                            <div class="w-10 h-7 rounded bg-amber-200/90 mb-3 flex items-center justify-center shadow-inner">
+                                <div class="w-7 h-5 border border-amber-900/40 rounded-sm"></div>
+                            </div>
+                            <p class="font-mono text-base tracking-widest text-white/90">
+                                •••• •••• •••• {{ substr($cardItem->card_number ?? '9201', -4) }}
+                            </p>
+                        </div>
+                        <div class="flex items-end justify-between text-xs text-white/70">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-white/50">Card Holder</p>
+                                <p class="text-white font-medium uppercase font-mono">{{ $cust_name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-right text-white/50">Expires</p>
+                                <p class="text-white font-medium font-mono">{{ $cardItem->expiry ?? '12/28' }}</p>
+                            </div>
+                        </div>
+                    </div>
                 @else
-                    <!-- Professional Demo/Fallback Rows Matching Reference Image -->
-                    <div class="py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs shadow-2xs">N</div>
+                    <!-- Sovereign Card Requisition Preview (If user has not ordered card yet) -->
+                    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-tr from-[#191c1c] via-[#242826] to-[#004226] text-white p-6 shadow-xl border border-white/10 group transition-transform hover:scale-[1.01] duration-300">
+                        <div class="flex items-start justify-between">
+                            <span class="font-heading font-bold tracking-wider text-emerald-300 text-sm">Institutional Commercial</span>
+                            <span class="material-symbols-outlined text-[24px] text-emerald-300">contactless</span>
+                        </div>
+                        <div class="my-6">
+                            <div class="w-10 h-7 rounded bg-amber-200/90 mb-3 flex items-center justify-center shadow-inner">
+                                <div class="w-7 h-5 border border-amber-900/40 rounded-sm"></div>
+                            </div>
+                            <p class="font-mono text-base tracking-widest text-white/90">
+                                •••• •••• •••• ••••
+                            </p>
+                        </div>
+                        <div class="flex items-end justify-between text-xs text-white/70">
                             <div>
-                                <p class="text-xs font-bold text-slate-800">Netflix Subscription</p>
-                                <p class="text-[11px] text-slate-400">Entertainment • 12 Sep 2026</p>
+                                <p class="text-[10px] uppercase tracking-wider text-white/50">Authorized Client</p>
+                                <p class="text-white font-medium uppercase font-mono truncate max-w-[160px]">{{ $cust_name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-right text-white/50">Status</p>
+                                <p class="text-emerald-300 font-medium font-mono">Available</p>
                             </div>
                         </div>
-                        <span class="text-xs font-bold font-mono text-rose-600">-{{ $cur }}15.99</span>
                     </div>
-                    <div class="py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                                <span class="material-symbols-outlined text-[17px]">payments</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Freelance Payment</p>
-                                <p class="text-[11px] text-slate-400">Income • 10 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold font-mono text-emerald-600">+{{ $cur }}1,200.00</span>
-                    </div>
-                    <div class="py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-2xs">
-                                <span class="material-symbols-outlined text-[17px]">directions_car</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Uber Ride</p>
-                                <p class="text-[11px] text-slate-400">Transport • 09 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold font-mono text-slate-900">-{{ $cur }}24.50</span>
-                    </div>
-                    <div class="py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs shadow-2xs">A</div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Amazon Marketplace</p>
-                                <p class="text-[11px] text-slate-400">Shopping • 07 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold font-mono text-slate-900">-{{ $cur }}120.00</span>
-                    </div>
-                    <div class="py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs shadow-2xs">
-                                <span class="material-symbols-outlined text-[17px]">account_balance_wallet</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Salary Credit</p>
-                                <p class="text-[11px] text-slate-400">Income • 05 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold font-mono text-emerald-600">+{{ $cur }}2,450.00</span>
+
+                    <div class="mt-4 pt-2 flex items-center justify-between">
+                        <span class="text-xs text-secondary font-medium">Physical & Virtual Issuance</span>
+                        <a href="{{ url('request-card') }}" class="text-xs font-bold text-[#004226] hover:underline flex items-center gap-1">
+                            <span>Order Card</span>
+                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </a>
                     </div>
                 @endif
             </div>
 
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                <span>Secure SSL 256-Bit Log</span>
-                <a href="{{ url('transactionslist') }}" class="font-semibold text-slate-700 hover:text-slate-900">Full Statement &rarr;</a>
-            </div>
-        </div>
+            <!-- Designated Institutional Account Officer Card -->
+            <div class="rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px] text-primary">support_agent</span>
+                            <span class="font-heading font-bold text-sm text-on-surface">Institutional Officer</span>
+                        </div>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Desk Active"></span>
+                    </div>
 
-        <!-- Spending Analytics & Investment Promo Banner (lg:col-span-4) -->
-        <div class="lg:col-span-4 flex flex-col gap-5">
-            <!-- Donut Card -->
-            <div class="bg-white rounded-[26px] p-6 border border-slate-200/80 shadow-card flex flex-col justify-between flex-1">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-base font-bold text-slate-900 tracking-tight">Spending Analytics</h3>
-                    <span class="text-xs font-semibold text-slate-500">This Month</span>
-                </div>
-
-                <!-- Donut Simulation with SVG -->
-                <div class="flex items-center justify-center my-2">
-                    <div class="relative w-36 h-36">
-                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="38" stroke="#f1f5f9" stroke-width="12" fill="none" />
-                            <!-- Shopping (32%) -->
-                            <circle cx="50" cy="50" r="38" stroke="#3b82f6" stroke-width="12" stroke-dasharray="76.4 238.8" stroke-dashoffset="0" fill="none" />
-                            <!-- Food (24%) -->
-                            <circle cx="50" cy="50" r="38" stroke="#10b981" stroke-width="12" stroke-dasharray="57.3 238.8" stroke-dashoffset="-76.4" fill="none" />
-                            <!-- Travel (18%) -->
-                            <circle cx="50" cy="50" r="38" stroke="#f59e0b" stroke-width="12" stroke-dasharray="43 238.8" stroke-dashoffset="-133.7" fill="none" />
-                            <!-- Utilities (14%) -->
-                            <circle cx="50" cy="50" r="38" stroke="#8b5cf6" stroke-width="12" stroke-dasharray="33.4 238.8" stroke-dashoffset="-176.7" fill="none" />
-                            <!-- Others (12%) -->
-                            <circle cx="50" cy="50" r="38" stroke="#cbd5e1" stroke-width="12" stroke-dasharray="28.7 238.8" stroke-dashoffset="-210.1" fill="none" />
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Total</span>
-                            <span class="text-sm font-bold text-slate-900 font-mono">{{ $cur }}3,214</span>
-                            <span class="text-[9px] text-slate-400">This Month</span>
+                    <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#004226] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                                SJ
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-on-surface">Sarah Jenkins</p>
+                                <p class="text-[11px] text-secondary">Senior Treasury Specialist</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-surface-container space-y-1.5 text-xs text-secondary font-mono">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[15px] text-primary">call</span>
+                                <span>+44 20 7946 0912</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[15px] text-primary">mail</span>
+                                <span>s.jenkins@equitable.com</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Categories Legend (Exact Reference Design) -->
-                <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            <span class="text-slate-600">Shopping</span>
-                        </div>
-                        <span class="font-bold text-slate-800">32%</span>
-                    </div>
-                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span class="text-slate-600">Food & Dining</span>
-                        </div>
-                        <span class="font-bold text-slate-800">24%</span>
-                    </div>
-                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <span class="text-slate-600">Travel</span>
-                        </div>
-                        <span class="font-bold text-slate-800">18%</span>
-                    </div>
-                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span class="text-slate-600">Utilities</span>
-                        </div>
-                        <span class="font-bold text-slate-800">14%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Investment Promo Banner (Exact Reference Design with Architecture Image) -->
-            <div class="rounded-[22px] overflow-hidden p-5 text-white relative shadow-sm min-h-[110px] flex items-center justify-between"
-                 style="background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.80) 50%, rgba(15, 23, 42, 0.35) 100%), url('{{ asset('images/investment_banner.jpg') }}') center / cover no-repeat;">
-                <div class="relative z-10 max-w-[210px]">
-                    <h4 class="text-sm font-bold text-white leading-snug">Grow Your Wealth with Smart Investments</h4>
-                    <a href="{{ url('portfolio') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-[#dfbb58] hover:text-white transition-colors mt-2">
-                        <span>Explore Now</span>
+                <div class="mt-4 pt-3 flex items-center justify-between border-t border-surface-container">
+                    <a href="{{ url('send-message') }}" class="text-xs font-bold text-[#004226] hover:underline flex items-center gap-1">
+                        <span>Message Desk</span>
                         <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
                     </a>
-                </div>
-                <div class="relative z-10">
-                    <a href="{{ url('portfolio') }}" class="w-9 h-9 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center text-white transition-all">
-                        <span class="material-symbols-outlined text-[18px]">trending_up</span>
+                    <a href="{{ url('account-manager') }}" class="text-xs text-secondary hover:text-on-surface">
+                        <span>Desk Hours</span>
                     </a>
                 </div>
             </div>
-        </div>
-
-        <!-- Upcoming Payments & Financial Insights (lg:col-span-3) -->
-        <div class="lg:col-span-3 flex flex-col gap-4">
-            <!-- Upcoming Payments -->
-            <div class="bg-white rounded-[26px] p-5 border border-slate-200/80 shadow-card flex-1">
-                <div class="flex items-center justify-between mb-3">
-                    <h4 class="text-sm font-bold text-slate-900 tracking-tight">Upcoming Payments</h4>
-                    <span class="text-[11px] text-[#c59b27] font-semibold hover:underline">View All</span>
-                </div>
-                <div class="space-y-2.5">
-                    <div class="flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-[15px]">bolt</span>
-                            </div>
-                            <div>
-                                <p class="font-bold text-slate-800">Electricity Bill</p>
-                                <p class="text-[10px] text-slate-400">Due 15 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-rose-500 font-mono">-{{ $cur }}75.00</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-[15px]">wifi</span>
-                            </div>
-                            <div>
-                                <p class="font-bold text-slate-800">Internet Bill</p>
-                                <p class="text-[10px] text-slate-400">Due 18 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-rose-500 font-mono">-{{ $cur }}40.00</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-[15px]">credit_card</span>
-                            </div>
-                            <div>
-                                <p class="font-bold text-slate-800">Credit Card Payment</p>
-                                <p class="text-[10px] text-slate-400">Due 20 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-rose-500 font-mono">-{{ $cur }}450.00</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-[15px]">security</span>
-                            </div>
-                            <div>
-                                <p class="font-bold text-slate-800">Insurance Premium</p>
-                                <p class="text-[10px] text-slate-400">Due 25 Sep 2026</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-rose-500 font-mono">-{{ $cur }}120.00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Insights Card -->
-            <div class="bg-gradient-to-br from-emerald-50 to-teal-50/50 rounded-[26px] p-5 border border-emerald-100/80 shadow-2xs">
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                        <span class="material-symbols-outlined text-[18px]">insights</span>
-                    </div>
-                    <div>
-                        <h5 class="text-xs font-bold text-emerald-950">Insights</h5>
-                        <p class="text-[11.5px] text-emerald-800 leading-snug mt-1 font-medium">Your spending is 12% lower than last month. Keep it up! You're on track to meet your savings goal.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hidden Crypto Data Feeds for live price updates -->
-    <div style="display:none">
-        <div id="crypto-wallets-hidden">
-        <?php foreach ($wallets as $wallet):
-            $wallet_cur = strtolower($wallet->currency);
-            if ($wallet_cur == 'eth') { $fund = $eth_fund ?? 0; }
-            elseif ($wallet_cur == 'btc') { $fund = $btc_fund ?? 0; }
-            elseif ($wallet_cur == 'usdttrc20') { $fund = $usdt_fund ?? 0; }
-            else { $fund = 0; }
-        ?>
-            <span id="amount-{{ $wallet->id }}">{{ $fund }}</span>
-            <span id="trade-value-{{ $wallet->id }}"></span>
-        <?php endforeach; ?>
         </div>
     </div>
 
 </div>
 
+<!-- Footer -->
 @include('footer')
 
-<!-- Live Real-Time Rate & Balance Scripts (Preserved) -->
 <script>
-  let isBalanceHidden = false;
-  function toggleBalanceVisibility() {
-      const balanceEl = document.getElementById('total_balance_display');
-      const maskedEl = document.getElementById('masked_balance_display');
-      const eyeIcon = document.getElementById('eye-icon');
-      isBalanceHidden = !isBalanceHidden;
-      if (isBalanceHidden) {
-          balanceEl.classList.add('hidden');
-          maskedEl.classList.remove('hidden');
-          eyeIcon.innerText = 'visibility_off';
-      } else {
-          balanceEl.classList.remove('hidden');
-          maskedEl.classList.add('hidden');
-          eyeIcon.innerText = 'visibility';
-      }
-  }
-
-  function updatePrices() {
-      const apiUrl = "{{ url('proxy2.php') }}"; 
-      fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-              let totalCryptoVal = 0;
-
-              <?php foreach ($wallets as $wallet): ?>
-                  (function() {
-                      const currencyType = "{{ strtolower($wallet->currency) }}"; 
-                      const amountEl = document.getElementById('amount-{{ $wallet->id }}');
-                      const amount = parseFloat(amountEl ? amountEl.textContent : 0);
-                      const tradeValueElement = document.getElementById('trade-value-{{ $wallet->id }}');
-
-                      if (currencyType === 'btc' && data.btc_price_in_usd) {
-                          const tradeValue = amount * data.btc_price_in_usd;
-                          if(tradeValueElement) tradeValueElement.innerHTML = `$${tradeValue.toFixed(2)}`;
-                          totalCryptoVal += tradeValue;
-                      } else if (currencyType === 'eth' && data.ethereum) {
-                          const tradeValue = amount * data.ethereum.usd;
-                          if(tradeValueElement) tradeValueElement.innerHTML = `$${tradeValue.toFixed(2)}`;
-                          totalCryptoVal += tradeValue;
-                      } else if (currencyType === 'usdttrc20') {
-                          const tradeValue = amount;
-                          if(tradeValueElement) tradeValueElement.innerHTML = `$${tradeValue.toFixed(2)}`;
-                          totalCryptoVal += tradeValue;
-                      }
-                  })();
-              <?php endforeach; ?>
-
-              const cryptoWalletEl = document.getElementById('total_live_wallet_balance');
-              if (cryptoWalletEl) {
-                  cryptoWalletEl.innerHTML = `$${totalCryptoVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-              }
-
-              const balanceSpan = document.getElementById('total_balance_display');
-              if (balanceSpan) {
-                  let availBal = parseFloat("<?php echo $display_balance; ?>");
-                  let grandTotal = (totalCryptoVal + availBal).toFixed(2);
-                  balanceSpan.innerText = parseFloat(grandTotal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-              }
-          })
-          .catch(err => {
-              // Graceful fallback to avoid console noise if proxy not reachable
-          });
-  }
-
-  window.addEventListener('load', function() {
-      updatePrices();
-      setInterval(updatePrices, 15000);
-      
-      // Update live clock
-      setInterval(function() {
-          const now = new Date();
-          const clock = document.getElementById('hero-live-clock');
-          if (clock) {
-              clock.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          }
-      }, 1000);
-  });
+    function filterActivities(query) {
+        const q = query.toLowerCase();
+        const rows = document.querySelectorAll('.activity-row');
+        rows.forEach(r => {
+            const text = r.innerText.toLowerCase();
+            r.style.display = text.includes(q) ? '' : 'none';
+        });
+    }
 </script>

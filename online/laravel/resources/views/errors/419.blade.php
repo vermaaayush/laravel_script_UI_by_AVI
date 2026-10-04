@@ -1,142 +1,113 @@
+@php
+    $config = DB::table('configs')->where('id','1')->first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<title>Not Found</title>
-
-	<!-- Google font -->
-	<link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
-
-	<!-- Custom stlylesheet -->
+	<title>419 - Session Expired | {{ $config->bank_name ?? 'Equitable Bank' }}</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        * {
-            -webkit-box-sizing: border-box;
-             box-sizing: border-box;
-        }
-        
+        * { box-sizing: border-box; }
         body {
-          padding: 0;
-          margin: 0;
+            margin: 0;
+            padding: 24px;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: #f8faf9;
+            color: #191c1c;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        #notfound {
-          position: relative;
-          height: 100vh;
+        .error-card {
+            background: #ffffff;
+            border: 1px solid #e6e9e8;
+            border-radius: 28px;
+            padding: 48px 36px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px -10px rgba(0, 66, 38, 0.08);
         }
-        
-        #notfound .notfound {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          -webkit-transform: translate(-50%, -50%);
-              -ms-transform: translate(-50%, -50%);
-                  transform: translate(-50%, -50%);
+        .icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            background: #fff8f6;
+            border: 1px solid #f9d7cf;
+            color: #ba1a1a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
-        
-        .notfound {
-          max-width: 560px;
-          width: 100%;
-          padding-left: 160px;
-          line-height: 1.1;
+        .code-badge {
+            display: inline-block;
+            background: #f8faf9;
+            border: 1px solid #e6e9e8;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #53625b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
         }
-        
-        .notfound .notfound-404 {
-          background: url('{{ asset('images/logo-full.png') }}');
-          position: absolute;
-          left: 0;
-          top: 0;
-          display: inline-block;
-          width: 140px;
-          height: 140px;
-          background-size: cover;
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            color: #191c1c;
+            letter-spacing: -0.02em;
         }
-        
-        .notfound .notfound-404:before {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          -webkit-transform: scale(2.4);
-              -ms-transform: scale(2.4);
-                  transform: scale(2.4);
-          border-radius: 50%;
-          background-color: #f2f5f8;
-          z-index: -1;
+        p {
+            font-size: 13.5px;
+            color: #53625b;
+            line-height: 1.55;
+            margin: 0 0 28px 0;
         }
-        
-        .notfound h1 {
-          /*font-family: 'Nunito', sans-serif;*/
-          /*font-size: 65px;*/
-          font-weight: 700;
-          margin-top: 0px;
-          margin-bottom: 10px;
-          color: #151723;
-          text-transform: uppercase;
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #004226;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 66, 38, 0.25);
         }
-        
-        .notfound h2 {
-          font-family: 'Nunito', sans-serif;
-          font-size: 21px;
-          font-weight: 400;
-          margin: 0;
-          text-transform: uppercase;
-          color: #151723;
+        .btn-primary:hover {
+            background: #0f5b38;
+            transform: translateY(-1px);
         }
-        
-        .notfound p {
-          font-family: 'Nunito', sans-serif;
-          color: #999fa5;
-          font-weight: 400;
-        }
-        
-        .notfound a {
-          font-family: 'Nunito', sans-serif;
-          display: inline-block;
-          font-weight: 700;
-          border-radius: 40px;
-          text-decoration: none;
-          color: #388dbc;
-        }
-        
-        @media only screen and (max-width: 767px) {
-          .notfound .notfound-404 {
-            width: 110px;
-            height: 110px;
-          }
-          .notfound {
-            padding-left: 15px;
-            padding-right: 15px;
-            padding-top: 110px;
-          }
-        }
-
     </style>
-
-
-
 </head>
-
 <body>
-
-	<div id="notfound">
-		<div class="notfound">
-			<div class="notfound-404"></div>
-			@php
-                $config = DB::table('configs')->where('id','1')->first();
-            @endphp
-            
-			<h2>{{$config->bank_name}}</h2>
-			<p>{{$config->bank_email}}</p>
-			<h2>Oops! Page Expired</h2>
-			<p>Sorry, your session has expired. <br> Please refresh and try again.</p>
-			<a href="{{url('/')}}">Back to homepage</a>
-		</div>
+	<div class="error-card">
+        <div class="icon-circle">
+            <span class="material-symbols-outlined" style="font-size: 36px;">lock_clock</span>
+        </div>
+        <br>
+        <span class="code-badge">HTTP 419 &bull; Security Timeout</span>
+        <h1>Banking Session Expired</h1>
+        <p>To protect your financial security, sessions automatically expire after periods of inactivity. Please re-authenticate to continue.</p>
+        <a href="{{ url('login') }}" class="btn-primary">
+            <span class="material-symbols-outlined" style="font-size: 18px;">login</span>
+            <span>Client Sign In</span>
+        </a>
 	</div>
-
 </body>
-
 </html>

@@ -1,18 +1,18 @@
     </main>
     <!-- Wrapper END -->
 
-    <!-- Minimal Modern Banking Footer -->
-    <footer class="mt-auto py-5 px-6 border-t border-[#edf0f4] bg-white text-slate-500 text-[12.5px] transition-colors">
+    <!-- Sovereign Institutional Banking Footer -->
+    <footer class="mt-auto py-5 px-6 border-t border-surface-container-high/60 bg-surface-container-lowest text-secondary text-xs">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-2">
-                <span class="font-semibold text-slate-700"><?= $confiG->bank_name ?? 'Equitable Bank' ?></span>
+                <span class="font-heading font-semibold text-on-surface"><?= $confiG->bank_name ?? 'OripioFin' ?></span>
                 <span>•</span>
-                <span>Licensed & Regulated Commercial Financial Institution</span>
+                <span>Sovereign Tier Custody, Clearing & Multi-Currency Treasury</span>
             </div>
-            <div class="flex items-center gap-4 text-slate-400">
-                <span>Copyright &copy; {{ date('Y') }} All Rights Reserved.</span>
+            <div class="flex items-center gap-3 text-secondary">
+                <span>Zurich • Singapore • London • New York</span>
                 <span class="hidden sm:inline">•</span>
-                <a href="{{ asset('send-message') }}" class="hover:text-slate-700 transition-colors">Support Desk</a>
+                <span>Copyright &copy; {{ date('Y') }} All Rights Reserved.</span>
             </div>
         </div>
     </footer>

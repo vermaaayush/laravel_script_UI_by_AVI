@@ -10,6 +10,19 @@
  * Usage: php -S 127.0.0.1:8000 router.php
  */
 
+// PHP 8.1+ compatibility: strip 'full_path' from $_FILES which breaks Symfony 4/5 FileBag
+if (!empty($_FILES)) {
+    $stripFullPath = function(&$files) use (&$stripFullPath) {
+        foreach ($files as &$file) {
+            if (is_array($file)) {
+                unset($file['full_path']);
+                $stripFullPath($file);
+            }
+        }
+    };
+    $stripFullPath($_FILES);
+}
+
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 // Serve static files directly if they exist on disk
